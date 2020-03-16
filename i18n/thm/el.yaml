@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: θεώρημα
+
+- id: proposition
+  translation: δήλωση
+
+- id: lemma
+  translation: λεμμά
+
+- id: corollary
+  translation: συνέπεια
+
+- id: definition
+  translation: ορισμός
+
+- id: remark
+  translation: παρατήρηση
+
+- id: proof
+  translation: απόδειξη

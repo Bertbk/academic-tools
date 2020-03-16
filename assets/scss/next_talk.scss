@@ -1,0 +1,36 @@
+section#next_talk h2{
+  font-weight:bold;
+  text-align:center;
+  margin-top:0px;
+}
+
+section#next_talk ul.info{
+/*  font-weight:bold;*/
+color:grey;
+font-size:1.1rem;
+}
+
+section#next_talk ul.info li i.fa-li{
+  top: inherit !important;
+}
+
+
+section#next_talk div.abstract{
+font-style: italic;
+}
+
+section#next_talk div.btn-links{
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+section#next_talk div.btn-links a{
+  font-size: 0.8em;
+}
+
+section#next_talk img{
+  margin:auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

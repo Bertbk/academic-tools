@@ -1,0 +1,1 @@
+{{ $ref := "" }}{{ $text := "" }}{{if .IsNamedParams }}  {{ $ref = .Get "ref" }}  {{with .Get "text" }}    {{ $text = . }}  {{else}}    {{ $text = .Inner }}  {{ end }}{{else}}  {{ $ref = .Get 0 }}  {{ if .Get 1 }}    {{ $text = .Get 1}}  {{else}}    {{ $text = .Inner }}  {{ end }}{{ end }}<a href="#{{ $ref }}">{{ $text | markdownify}}</a>

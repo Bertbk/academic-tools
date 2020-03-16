@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: dalil
+
+- id: proposition
+  translation: pernyataan
+
+- id: lemma
+  translation: kata pengantar singkat
+
+- id: corollary
+  translation: akibat wajar
+
+- id: definition
+  translation: definisi
+
+- id: remark
+  translation: ucapan
+
+- id: proof
+  translation: bukti

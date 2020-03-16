@@ -1,0 +1,30 @@
+
+
+{{ $type := "thm"}}
+{{ $name :=  "" }}
+{{ $label :=  "" }}
+
+{{ if .IsNamedParams }}
+  {{ with (.Get "type")}}{{ $type = . }}{{end}}
+  {{ with (.Get "name")}}{{ $name = . }}{{end}}
+  {{ with (.Get "label")}}{{ $label = . }}{{ end }}
+{{ else }}
+  {{ $type = .Get 0 }}
+  {{ with (.Get 1)}}{{ $name = . }}{{end}}
+  {{ with (.Get 2)}}{{ $label = . }}{{ end }}
+{{ end }}
+
+{{ .Page.Scratch.Add "count_thm" 1 }}
+{{ if and (eq $name "") (eq $label "")  }}
+  {{ $label = printf "%s-%d" $type (.Page.Scratch.Get "count_thm") }}
+{{ else if eq $label "" }}
+  {{ $label = printf "%s-%s" $type $name | urlize }}
+{{ end }}
+
+<div class="thm">
+ <p id="{{ $label }}" class="thm-title thm-{{$type}}"> <a href="#{{ $label }}" class="thm-anchor">{{ i18n $type | humanize }} {{$.Page.Scratch.Get "count_thm"}}{{ with $name}} ({{ . }}){{end}}.</a></p>
+  <div class="thm-inner thm-{{$type}}">
+    {{ .Inner | markdownify }}
+  </div>
+</div>
+

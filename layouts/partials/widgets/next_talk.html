@@ -1,0 +1,122 @@
+{{/* Pages Widget */}}
+
+{{/* Initialise */}}
+{{ $ := .root }}
+{{ $st := .page }}
+{{ $items_type := $st.Params.content.page_type | default "talk" }}
+{{ $items_offset := $st.Params.content.offset | default 0 }}
+{{ $items_count := 1 }}
+{{ $items_sort := $st.Params.content.order | default "desc" }}
+
+{{/* Query */}}
+{{ $query := where $.Site.RegularPages "Type" $items_type }}
+{{ $archive_page := $.Site.GetPage "Section" $items_type }}
+
+{{/* Filters */}}
+{{ if $st.Params.content.filters.tag }}
+  {{ $archive_page = $.Site.GetPage (printf "tags/%s" $st.Params.content.filters.tag) }}
+  {{ $query = $query | intersect $archive_page.Pages }}
+{{ end }}
+{{ if $st.Params.content.filters.category }}
+  {{ $archive_page = $.Site.GetPage (printf "categories/%s" $st.Params.content.filters.category) }}
+  {{ $query = $query | intersect $archive_page.Pages }}
+{{ end }}
+
+{{/* Exclude past talk */}}
+{{ $query = where $query "Date" ">" now }}
+
+{{ $count := len $query }}
+
+{{/* Sort */}}
+{{ $sort_by := "Date" }}
+{{ $query = sort $query $sort_by $items_sort }}
+
+{{/* Offset and Limit (forced =1) */}}
+{{ $item := false }}
+{{ $summary := false }}
+{{ $show_authors_only := false }}
+{{ $show_buttons := false }}
+{{ if gt $items_offset 0 }}
+  {{ $item = index $query $items_offset }}
+{{ else }}
+  {{ $item = index $query 0 }}
+{{ end }}
+
+{{ with $item }}
+  {{ $show_authors_only = true }}
+  {{ $show_buttons = true }}
+  {{ if .Params.summary }}
+    {{ $summary = .Params.summary | markdownify | emojify }}
+  {{ else if .Params.abstract }}
+    {{ $summary = .Params.abstract | markdownify | emojify }}
+  {{ else if .Summary }}
+    {{ $summary = .Content | markdownify | emojify}}
+  {{ end }}
+{{ end }}
+
+  <!------------------------>
+
+<div class="row">
+  <div class="col-xs-12 col-lg-4 section-heading">
+    <h1>Prochain Exposé</h1>
+    {{ with $st.Content }}<p>{{ . }}</p>{{ end }}
+    {{ if $item }}
+      <ul class="fa-ul info">
+          {{ if $item.Params.categories }}
+            {{ with (index $item.Params.categories 0) }}
+            <li><span class="fa-li fa-layers fa-fw">
+              <i class="fas fa-user"></i>
+              <i class="fas fa-question" data-fa-transform="shrink-4 up-3 right-9"></i></span> {{ . }}
+            </li>
+          {{ end }}
+        {{end}}
+        <li><i class="fa-li fas fa-calendar-day"></i>{{ $date := $item.Date }}
+          {{ index $.Site.Data.jours (printf "%d" (time $date).Weekday) }} {{ (time $date).Format $.Site.Params.date_format }}</li>
+        {{ if not $item.Params.all_day }}
+          <li><i class="fa-li far fa-clock"></i>
+          {{ (time $date).Format "15:04" }}
+          {{ with $item.Params.date_end }}&mdash; {{ (time .).Format "15:04" }}{{ end }}
+          </li>
+        {{ end }}
+        {{ with $item.Params.location }}
+          <li><i class="fa-li fas fa-map-marker-alt"></i>{{ . }}
+          {{ with $item.Params.address}}{{with .street}}<br>{{ .}}{{end}}{{with .city}}, {{ .}}{{end}}{{with .region}}, {{ .}}{{end}}.{{ end }}
+          </li>
+        {{ end }}
+        </ul>
+    {{ end }}
+    {{ with $st.Params.subtitle }}<p>{{ . | markdownify | emojify }}</p>{{ end }}
+  </div>
+  <div class="col-xs-12 col-lg-8">
+    {{ if $item }}
+      <h2 class="article-title mb-0 mt-0">
+        <a href="{{ $item.RelPermalink }}" itemprop="url">{{ $item.Title }}</a>
+      </h2>
+      {{ $resource := ($item.Resources.ByType "image").GetMatch "*featured*" }}
+      {{ with $resource }}
+        {{ $image := .Resize "400x" }}
+        <a href="{{ $item.RelPermalink }}">
+          <img src="{{ $image.RelPermalink }}" itemprop="image">
+        </a>
+      {{end}}
+      <div class="article-style abstract" itemprop="articleBody">
+        {{ if $summary }}
+          {{ $summary | truncate 150}} {{if (gt (len $summary) 150) }}<a href="{{ $item.RelPermalink }}">Lire la suite</a>{{end}}
+        {{else}}
+          <p>À venir&hellip;</p>
+        {{end}}
+      </div>
+      {{ if $show_buttons }}
+        <div class="btn-links">
+          {{ partial "page_links" (dict "content" $item "is_list" 1) }}
+        </div>
+      {{ end }}
+      {{ partial "page_links_div.html" $item }}
+      {{ partial "page_author.html" $item }}
+    {{ else }}
+      <h3 class="article-title mb-0 mt-0"><i class="far fa-sad-tear"></i> Désolé, aucun exposé prévu pour le moment&hellip;</h3>
+      <p>&hellip; Mais souscrivez à la liste de diffusion pour rester informé ! <i class="far fa-smile-beam"></i><p>
+      <a href='https://listes.math.cnrs.fr/wws/subscribe/infomath_su?previous_action=info'><button type="button" class="btn btn-outline-primary">Souscription à la liste de diffusion</button></a>
+    {{ end }}
+  </div>
+</div>

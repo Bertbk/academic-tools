@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: 정리
+
+- id: proposition
+  translation: 명제
+
+- id: lemma
+  translation: 보조정리
+
+- id: corollary
+  translation: 따름정리
+
+- id: definition
+  translation: 정의
+
+- id: remark
+  translation: 말
+
+- id: proof
+  translation: 증명

@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: định lý
+
+- id: proposition
+  translation: tuyên bố
+
+- id: lemma
+  translation: bổ đề
+
+- id: corollary
+  translation: hệ quả
+
+- id: definition
+  translation: dịnh nghĩa
+
+- id: remark
+  translation: nhận xét
+
+- id: proof
+  translation: chứng minh

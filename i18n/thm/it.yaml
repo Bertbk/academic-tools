@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: teorema
+
+- id: proposition
+  translation: proposizione
+
+- id: lemma
+  translation: lemma
+
+- id: corollary
+  translation: corollario
+
+- id: definition
+  translation: definizione
+
+- id: remark
+  translation: remark
+
+- id: proof
+  translation: prova

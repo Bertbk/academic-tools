@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: 定理
+
+- id: proposition
+  translation: 命題
+
+- id: lemma
+  translation: 補題
+
+- id: corollary
+  translation: 系
+
+- id: definition
+  translation: 定義
+
+- id: remark
+  translation: リマーク
+
+- id: proof
+  translation: 証明

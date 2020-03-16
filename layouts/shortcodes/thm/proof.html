@@ -1,0 +1,8 @@
+{{ .Page.Scratch.Add "count_thm_proof" 1 }}
+{{ $label := printf "thm-proof-%d" (.Page.Scratch.Get "count_thm_proof") }}
+<div class="thm">
+  <div class="thm-inner-proof"><p id="{{$label}}" class="thm-title-proof"><a href="#{{$label}}-end"><i class="fas fa-arrow-circle-down"></i></a>Proof.</p>{{ .Inner | markdownify }}
+    <p class="thm-end-proof" id="{{$label}}-end"><i class="fas fa-square"></i> <a href="#{{$label}}"><i class="fas fa-arrow-circle-up"></i></a></p>
+  </div>
+</div>
+

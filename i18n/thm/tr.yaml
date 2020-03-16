@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: teorem
+
+- id: proposition
+  translation: beyan
+
+- id: lemma
+  translation: baş kelime
+
+- id: corollary
+  translation: sonuç
+
+- id: definition
+  translation: tanım
+
+- id: remark
+  translation: düşünce
+
+- id: proof
+  translation: ispat

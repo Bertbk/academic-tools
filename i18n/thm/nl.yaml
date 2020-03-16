@@ -1,0 +1,22 @@
+# Math
+
+- id: theorem
+  translation: stelling
+
+- id: proposition
+  translation: propositie
+
+- id: lemma
+  translation: hulpstelling
+
+- id: corollary
+  translation: corollarium
+
+- id: definition
+  translation: definitie
+
+- id: remark
+  translation: remark
+
+- id: proof
+  translation: wiskundig bewijs
