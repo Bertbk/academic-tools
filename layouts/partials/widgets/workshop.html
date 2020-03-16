@@ -1,0 +1,25 @@
+{{ $ := .root }}
+{{ $st := .page }}
+{{ $day := ""}}
+{{ $ntalks := 0 }}
+
+{{ $items_type := $st.Params.content.page_type | default "talk" }}
+{{ $items_days := $st.Params.content.days }}
+{{ $nrows_talk := $st.Params.content.nrows_talk | default 3 }}
+{{ $nrows_break := $st.Params.content.nrows_break | default 2 }}
+
+{{ $query := (where $.Site.RegularPages "Type" $items_type).GroupByDate "2006-01-01T15:00:00+01:00" "asc"}}
+
+{{range $items_days }}
+  {{/* Get talks of the day */}}
+  {{ $ntalks = 0 }}
+  {{ range $query }}
+    {{if eq ((time .Key).Format "2006-01-01") . }}
+      {{ $ntalks = add $ntalk 1 }}
+      {{ range .Pages }}
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+        {{.Content}} <br>
+        {{end}}
+    {{end}}
+  {{end}}
+{{end}}
