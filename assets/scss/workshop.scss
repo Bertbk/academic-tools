@@ -1,0 +1,151 @@
+/* Full Schedule */
+
+/*
+@media (max-width: 990px) {
+  section.workshop-container{
+    display: block;
+  }
+}
+@media (min-width: 990px) {
+  section.workshop-container{
+    display: grid;
+    grid-template-columns: repeat(auto, minmax(160px, 1fr));
+    grid-gap: 1rem;
+    grid-auto-flow: dense;
+  }
+}
+*/
+nav.workshop ul{
+  display:flex;
+  flex-wrap: wrap;
+}
+
+nav.workshop li{
+  display:inline-block;
+}
+
+nav.workshop li a{
+  text-align: center;
+  color:var(--primary);
+  background-color: white;
+  font-weight: bold;
+  font-size:1em;
+  border-radius: 10px;
+  padding:10px;
+  border: solid 2px var(--primary);
+  margin-right:5px;
+} day
+
+nav.workshop li a:hover,
+nav.workshop li.active a{
+  text-decoration: none;
+  background-color: var(--primary);
+  color:white;
+}
+
+
+section.workshop-container article.workshop-day{
+  margin:auto;
+  display: inline-grid;
+  grid-template-columns: auto 500px;
+  grid-template-rows: auto repeat(var(--nrows),5em);
+  grid-gap: 0.5rem;
+}
+
+section.workshop-container article.workshop-day h3{
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2 ;
+  margin:0px;
+  text-align:center;
+  color:var(--primary);
+  background-color: white;
+  font-weight: bold;
+  font-size:1em;
+  border-radius: 10px;
+  padding:10px;
+  border: solid 2px var(--primary);
+}
+
+/* slot */
+section.workshop-container article.workshop-day div.workshop-info{
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start:var(--row_start);
+  grid-row-end:var(--row_end);
+  border-radius: 10px;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+
+section.workshop-container article.workshop-day div.workshop-info{
+  background-color: ghostwhite;
+  color:grey;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+section.workshop-container article.workshop-day div.workshop-info li.workshop-chairperson span.title{
+  display: none;
+}
+
+/* Talk */
+div.workshop-talk{
+  background-color: ghostwhite;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start:var(--row_start);
+  grid-row-end:var(--row_end);
+  cursor: pointer;
+  position:relative;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  transition: all 0.2s ease-out;
+}
+
+div.workshop-talk:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+
+div.workshop-talk p.workshop-talk-abstract{
+  font-style: italic;
+}
+
+div.workshop-talk div.workshop-talk-speaker{
+  height:32px;
+  text-align:left;
+  position:absolute;
+  bottom: 10px;
+}
+
+div.workshop-talk div.workshop-tags{
+display: flex;
+flex-wrap: wrap;
+}
+
+div.workshop-talk div.workshop-tag{
+  padding-left:5px;
+  padding-right:5px;
+  margin:2px;
+  border-radius: 5px;
+  min-width: 50px;
+  color:var(--primary);
+  border: var(--primary) solid 2px;
+}
+
+div.workshop-info img,
+div.workshop-talk div.workshop-talk-speaker img{
+  width:32px;
+  height:32px;  
+  float:left;
+  margin-left:5px;
+  margin-right:5px;
+}
+
+/* Breaks */
+div.workshop-break{
+text-align:center;
+}
