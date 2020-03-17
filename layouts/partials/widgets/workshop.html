@@ -17,7 +17,7 @@
   <ul>
     {{ $first := true}}
   {{ range $items_days}}
-    <li {{if $first}}class="active"{{$first = false}}{{end}}><a href="#workshop-day-{{.}}">{{(time . ).Format "02/01/2006"}}</a></li>
+    <li {{if $first}}class="active"{{$first = false}}{{end}}><a href="#" onclick="hideUnhide('workshop-day-{{.}}')">{{(time . ).Format "02/01/2006"}}</a></li>
   {{end}}
   </ul>
 </nav>
@@ -80,7 +80,15 @@
 
 
 <script>
-  {{/* TODO: navigation display/hide the day*/}}
+  function hideUnhide(id_to_hide) {
+    var x = document.getElementById(id_to_hide);
+    if (x.style.display === "none") {
+      x.style.display = "inline-grid";
+    } else {
+      x.style.display = "none";
+    }
+  }
+  
   {{/* TODO: TODAY is active (if)*/}}
 </script>
 
