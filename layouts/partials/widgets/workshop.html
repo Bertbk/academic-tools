@@ -5,21 +5,82 @@
 
 {{ $items_type := $st.Params.content.page_type | default "talk" }}
 {{ $items_days := $st.Params.content.days }}
-{{ $nrows_talk := $st.Params.content.nrows_talk | default 3 }}
+{{ $nrows_talk := $st.Params.content.nrows_talk | default 2 }}
 {{ $nrows_break := $st.Params.content.nrows_break | default 2 }}
 
-{{ $query := (where $.Site.RegularPages "Type" $items_type).GroupByDate "2006-01-01T15:00:00+01:00" "asc"}}
+{{ $query := (where $.Site.Pages "Type" $items_type).GroupByDate "2006-01-01T15:00:00+01:00" "asc"}}
 
-{{range $items_days }}
-  {{/* Get talks of the day */}}
-  {{ $ntalks = 0 }}
-  {{ range $query }}
-    {{if eq ((time .Key).Format "2006-01-01") . }}
-      {{ $ntalks = add $ntalk 1 }}
-      {{ range .Pages }}
-        <a href="{{ .Permalink }}">{{ .Title }}</a>
-        {{.Content}} <br>
-        {{end}}
-    {{end}}
+<h2> {{$st.Title}} </h2>
+{{ with $st.Content }}{{ . }}{{ end }}
+
+<nav class="workshop">
+  <ul>
+    {{ $first := true}}
+  {{ range $items_days}}
+    <li {{if $first}}class="active"{{$first = false}}{{end}}><a href="#workshop-day-{{.}}">{{(time . ).Format "02/01/2006"}}</a></li>
   {{end}}
-{{end}}
+  </ul>
+</nav>
+
+
+<section class ="workshop-container">
+  {{ range $items_days }}
+    {{$day = .}}
+    {{ $nrows := 0 }}
+    {{/*TODO: add to array instead of requerying every times*/}}
+    {{ range $query }}
+      {{ $talk := index .Pages 0 }}
+      {{if eq ((time $talk.Date).Format "2006-01-02") $day }}
+        {{ $nrows = add $nrows $nrows_talk }}
+      {{ end }}
+    {{ end }}
+
+    <article id="workshop-day-{{$day}}" class ="workshop-day" style="--nrows:{{$nrows}}">
+      <h3>{{ (time $day).Format "Monday 2 January 2006" }}</h3>
+      {{$row_start := 2 }}
+      {{ range $query }}
+        {{ $talk := index .Pages 0 }}
+        {{if eq ((time $talk.Date).Format "2006-01-02") $day }}
+          {{ $row_end := add $row_start $nrows_talk }}
+          {{ $time_start := (time $talk.Date).Format "15:04" }}
+          {{ $room := $talk.Params.location }}
+
+          <div class="workshop-info" style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
+            <ul class="fa-ul">
+              <li><i class="fa-li far fa-clock"></i>{{ $time_start }}</li>
+              {{with $room }}<li><i class="fa-li fas fa-map-marker-alt"></i>{{.}}</li>{{end}}
+              {{with $talk.Params.chairperson }}<li class="workshop-chairperson"><span class="title">Chairperson</span><span><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "display_avatar" "true" "link_author" "true")}}</span></li>{{end}}
+            </ul>
+          </div>
+
+          {{ if eq $talk.Type "talk"}}
+            <div class="workshop-talk"  style="--row_start:{{$row_start}};--row_end:{{$row_end}};"  onclick="location.href='{{$talk.RelPermalink}}';">
+              <div class="workshop-talk-content">
+                <h4>{{$talk.Title}}</h4>
+                {{with $talk.Params.abstract}}<p class="workshop-talk-abstract">{{. |markdownify}}</p>{{end}}
+              </div>
+              <div class="workshop-tags">
+              {{range $talk.Params.tags}}
+                <div class="workshop-tag">{{.}}</div>
+              {{end}}
+              </div>
+              {{range $talk.Params.authors}}
+                <div class="workshop-talk-speaker">
+                  {{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "false")}}
+                </div>
+              {{end}}
+            </div>
+          {{end}}
+          {{$row_start = $row_end }}
+        {{end}}
+      {{end}}
+    </article>
+  {{ end }}
+</section>
+
+
+<script>
+  {{/* TODO: navigation display/hide the day*/}}
+  {{/* TODO: TODAY is active (if)*/}}
+</script>
+
