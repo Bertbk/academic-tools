@@ -7,6 +7,7 @@
 {{ $items_offset := $st.Params.content.offset | default 0 }}
 {{ $items_count := 1 }}
 {{ $items_sort := $st.Params.content.order | default "desc" }}
+{{ $date_format := $st.Params.content.date_format | default $.Site.Params.date_format }}
 
 {{/* Query */}}
 {{ $query := where $.Site.RegularPages "Type" $items_type }}
@@ -71,7 +72,7 @@
           {{ end }}
         {{end}}
         <li><i class="fa-li fas fa-calendar-day"></i>{{ $date := $item.Date }}
-          {{ index $.Site.Data.jours (printf "%d" (time $date).Weekday) }} {{ (time $date).Format $.Site.Params.date_format }}</li>
+          {{ (time $date).Format $date_format }}</li>
         {{ if not $item.Params.all_day }}
           <li><i class="fa-li far fa-clock"></i>
           {{ (time $date).Format "15:04" }}
