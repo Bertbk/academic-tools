@@ -47,28 +47,37 @@
 
           <div class="workshop-info" style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
             <ul class="fa-ul">
-              <li><i class="fa-li far fa-clock"></i>{{ $time_start }}</li>
+              <li class="workshop-time"><i class="fa-li far fa-clock"></i>{{ $time_start }}</li>
               {{with $room }}<li><i class="fa-li fas fa-map-marker-alt"></i>{{.}}</li>{{end}}
               {{with $talk.Params.chairperson }}<li class="workshop-chairperson"><span class="title">Chairperson</span><span><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "display_avatar" "true" "link_author" "true")}}</span></li>{{end}}
             </ul>
           </div>
 
           {{ if eq $talk.Type "talk"}}
-            <div class="workshop-talk"  style="--row_start:{{$row_start}};--row_end:{{$row_end}};"  onclick="location.href='{{$talk.RelPermalink}}';">
-              <div class="workshop-talk-content">
+            <div class="workshop-talk"  style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
+              <a href="{{$talk.RelPermalink}}">
                 <h4>{{$talk.Title}}</h4>
-                {{with $talk.Params.abstract}}<p class="workshop-talk-abstract">{{. |markdownify}}</p>{{end}}
-              </div>
-              <div class="workshop-tags">
-              {{range $talk.Params.tags}}
-                <div class="workshop-tag">{{.}}</div>
-              {{end}}
-              </div>
-              {{range $talk.Params.authors}}
-                <div class="workshop-talk-speaker">
-                  {{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "false")}}
+                {{$summary :=""}}
+                {{ if $talk.Params.summary }}
+                  {{ $summary = $talk.Params.summary }}
+                {{ else if $talk.Params.abstract }}
+                  {{ $summary = $talk.Params.abstract }}
+                {{ else if $talk.Summary }}
+                  {{ $summary = $talk.Content}}
+                {{ end }}
+                <p class="workshop-talk-abstract">{{$summary | plainify| emojify |truncate 50 "..."}}</p>
+                <hr>
+                <div class="workshop-talk-tags">
+                  {{range $talk.Params.tags}}
+                  <div class="workshop-talk-tag">{{.}}</div>
+                {{end}}
                 </div>
-              {{end}}
+                {{range $talk.Params.authors}}
+                  <div class="workshop-talk-speaker">
+                    {{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "false")}}
+                  </div>
+                {{end}}
+              </a>
             </div>
           {{end}}
           {{$row_start = $row_end }}
