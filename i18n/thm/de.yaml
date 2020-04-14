@@ -4,7 +4,7 @@
   translation: Satz
 
 - id: proposition
-  translation: Aussage
+  translation: Proposition
 
 - id: lemma
   translation: Lemma
@@ -16,7 +16,7 @@
   translation: Definition
 
 - id: remark
-  translation: Anmerkung
+  translation: Bemerkung
 
 - id: proof
   translation: Beweis
