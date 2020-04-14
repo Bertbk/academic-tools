@@ -116,7 +116,7 @@ The result being the following:
 
 #### Remark
 
-As you notice and contrary to LaTeX, the cross reference do not provide the number of the theorem. This is a little bit complicated as the numbering is done through CSS counter and I believe it is not necessary. However, if you are interested in, we can discuss about it. 
+As you notice and contrary to LaTeX, the cross reference do not provide the number of the theorem. This is a little bit complicated as the numbering is done through CSS counter and I believe it is not necessary. However, if you are interested in, we can discuss about it.
 
 ## Button (shortcode)
 
@@ -129,8 +129,9 @@ Button as a block (with an icon):
 <i class="fab fa-github"></i> Download academic-tools!
 {{< /button >}}
 ```
+This will be displayed as:
 
-![Button example](button.png)
+![Button example](static/img/button.png)
 
 ## Next Talk  (widget)
 
@@ -141,6 +142,6 @@ You can see an example of it on the [website of infomath](https://infomath.pages
 - The category of the talk is displayed on the menu on the left
 
 
-![next talk](next_talk.png)
+![next talk](static/img/next_talk.png)
 
 Credit: Photo of the Coffee by [Mike Kenneally](https://unsplash.com/photos/tNALoIZhqVM) on Unsplash
