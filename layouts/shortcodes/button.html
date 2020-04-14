@@ -1,1 +1,1 @@
-<a href='{{ .Get "src" }}'><button type="button" class="btn btn-outline-primary">{{ .Get "title"}}</button></a>
+{{with .Get "src"}}<a href='{{ . }}'>{{end}}<button type="button" class="btn btn-outline-primary">{{with .Get "title"}}{{.}}{{else}}{{ .Inner |markdownify}}{{end}}</button>{{if .Get "src"}}</a>{{end}}
