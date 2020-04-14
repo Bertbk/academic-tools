@@ -114,6 +114,17 @@ The result being the following:
 
 ![Cross Reference example](static/img/thm-cross-ref.png)
 
+If the theorem (or definition or...) is on a different page (say `intro.md`), you can use the `page` option. In that case, the options parameters must be explicit, either inline
+```hugo
+ {{< thm/ref ref="thm:me" text="covfefe Theorem" page="intro.md"/>}}
+```
+or in a block environment
+```hugo
+ {{< thm/ref ref="thm:me" page="intro.md">}}
+ covfefe Theorem
+ {{< /thm/ref >}}
+```
+
 #### Remark
 
 As you notice and contrary to LaTeX, the cross reference do not provide the number of the theorem. This is a little bit complicated as the numbering is done through CSS counter and I believe it is not necessary. However, if you are interested in, we can discuss about it.
