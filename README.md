@@ -6,6 +6,7 @@ This is an add-on for the [`Academic`](https://github.com/gcushen/hugo-academic/
 - `Thm` shortcode: mimic `amsthm` latex package
 - `button` shortcode: for a nice bootstrap-styled button
 
+
 ## Installation
 
 Obviously, the [`Academic`](https://github.com/gcushen/hugo-academic/) theme is requiered.
@@ -32,6 +33,12 @@ Obviously, the [`Academic`](https://github.com/gcushen/hugo-academic/) theme is 
     ```scss
     @import "academic-tools";
     ```
+3. For Next Talk widget: add [FontAwesome JS file](https://fontawesome.com/): in `/layouts/partials/custom_js.html` (create it if necessary), add the following line
+```html
+<script src="https://use.fontawesome.com/releases/v{{ site.Data.assets.css.fontAwesome.version}}/js/all.js"></script>
+```
+
+
 
 ### Remarks
 
@@ -117,4 +124,13 @@ As you notice and contrary to LaTeX, the cross reference do not provide the numb
 
 ## Next Talk  (widget)
 
-TODO:
+You can see an example of it on the [website of infomath](https://infomath.pages.math.cnrs.fr/).
+
+- The content of the widget is displayed when no talk are programmed
+- No new meta-data are used
+- The category of the talk is displayed on the menu on the left
+
+
+![next talk](next_talk.png)
+
+Credit: Photo of the Coffee by [Mike Kenneally](https://unsplash.com/photos/tNALoIZhqVM) on Unsplash
