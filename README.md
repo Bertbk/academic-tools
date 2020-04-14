@@ -118,9 +118,19 @@ The result being the following:
 
 As you notice and contrary to LaTeX, the cross reference do not provide the number of the theorem. This is a little bit complicated as the numbering is done through CSS counter and I believe it is not necessary. However, if you are interested in, we can discuss about it. 
 
-
-
 ## Button (shortcode)
+
+For a short text, this shortcode can be inline (note the trailing slash) or as a block to insert (for example) icons:
+```hugo
+Button inline:
+{{< button src="https://github.com/Bertbk/academic-tools" title="Download academic-tools!" />}}
+Button as a block (with an icon):
+{{< button src="https://github.com" >}}
+<i class="fab fa-github"></i> Download academic-tools!
+{{< /button >}}
+```
+
+![Button example](button.png)
 
 ## Next Talk  (widget)
 
