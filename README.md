@@ -118,7 +118,25 @@ The result being the following:
 
 As you notice and contrary to LaTeX, the cross reference do not provide the number of the theorem. This is a little bit complicated as the numbering is done through CSS counter and I believe it is not necessary. However, if you are interested in, we can discuss about it.
 
-## Button (shortcode)
+## Shortcodes
+
+### Div
+
+Create an HTML `div` tag with `id`, `class`, `style` of your choice:
+```hugo
+{{< div id="my_id" class="my_class" style="text-align:center;">}}
+loremp ipsum
+{{< /div >}}
+```
+
+### JS
+
+Add a `script` tag linking to `src` javascript file:
+```hugo
+{{< js src="link-to-js-file" />}}
+```
+
+### Button
 
 For a short text, this shortcode can be inline (note the trailing slash) or as a block to insert (for example) icons:
 ```hugo
@@ -133,14 +151,24 @@ This will be displayed as:
 
 ![Button example](static/img/button.png)
 
-## Next Talk  (widget)
+Other options are also available:
+- `src`: path to a link
+- `title`: text displayed in the button. Should be left empty if used as a block environment
+- `type`: correspond to [Bootstrap predefined button styles](https://getbootstrap.com/docs/4.0/components/buttons/), by default `type=outline-primary`
+- `id`: add a HTML id to the button
+- `class`: add custom class name to the button
+
+To center a button, it can for example be combined with a `{{< div style="text-align:center;">}}{{< button .../>}}{{< /div>}}`.
+
+## Widgets
+
+### Next Talk
 
 You can see an example of it on the [website of infomath](https://infomath.pages.math.cnrs.fr/).
 
 - The content of the widget is displayed when no talk are programmed
 - No new meta-data are used
 - The category of the talk is displayed on the menu on the left
-
 
 ![next talk](static/img/next_talk.png)
 
