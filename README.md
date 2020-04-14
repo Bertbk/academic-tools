@@ -80,7 +80,7 @@ This "theme" contains [Hugo shortcodes](https://gohugo.io/content-management/sho
 ```md
 {{< thm/thm type="theorem" name="of me" label="thm:me" >}}
 This theorem proves that covfefe.
-{{< /thm >}}
+{{< /thm/thm >}}
 {{< thm/proof >}}
 The proof is very good. I like proof. I have big proof.
 {{< /thm/proof >}}
