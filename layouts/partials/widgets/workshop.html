@@ -6,9 +6,9 @@
 {{ $items_type := $st.Params.content.page_type | default "talk" }}
 {{ $items_days := $st.Params.content.days }}
 {{ $nrows_talk := $st.Params.content.nrows_talk | default 2 }}
-{{ $nrows_break := $st.Params.content.nrows_break | default 2 }}
+{{ $nrows_break := $st.Params.content.nrows_break | default 1 }}
 
-{{ $query := (where $.Site.Pages "Type" $items_type).GroupByDate "2006-01-01T15:00:00+01:00" "asc"}}
+{{ $query := (where $.Site.RegularPages "Type" "in" $items_type).GroupByDate "2006-01-01T15:00:00+01:00" "asc"}}
 
 <h2> {{$st.Title}} </h2>
 {{ with $st.Content }}{{ . }}{{ end }}
@@ -31,7 +31,11 @@
     {{ range $query }}
       {{ $talk := index .Pages 0 }}
       {{if eq ((time $talk.Date).Format "2006-01-02") $day }}
-        {{ $nrows = add $nrows $nrows_talk }}
+        {{$nrows_ := $nrows_talk}}
+        {{with $talk.Params.nrows}}
+          {{ $nrows_ = $talk.Params.nrows }}
+        {{end}}
+        {{ $nrows = add $nrows $nrows_ }}
       {{ end }}
     {{ end }}
 
@@ -41,15 +45,21 @@
       {{ range $query }}
         {{ $talk := index .Pages 0 }}
         {{if eq ((time $talk.Date).Format "2006-01-02") $day }}
-          {{ $row_end := add $row_start $nrows_talk }}
+          {{$nrows_ := $nrows_talk}}
+          {{with $talk.Params.nrows}}
+            {{ $nrows_ = $talk.Params.nrows }}
+          {{end}}
+          {{ $row_end := add $row_start $nrows_ }}
           {{ $time_start := (time $talk.Date).Format "15:04" }}
           {{ $room := $talk.Params.location }}
-
           <div class="workshop-info" style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
             <ul class="fa-ul">
               <li class="workshop-time"><i class="fa-li far fa-clock"></i>{{ $time_start }}</li>
               {{with $room }}<li><i class="fa-li fas fa-map-marker-alt"></i>{{.}}</li>{{end}}
-              {{with $talk.Params.chairperson }}<li class="workshop-chairperson"><span class="title">Chairperson</span><span><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "display_avatar" "true" "link_author" "true")}}</span></li>{{end}}
+              {{range $talk.Params.authors}}
+                <li><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "true")}}</li>
+              {{end}}
+              {{with $talk.Params.chairperson }}<li class="workshop-chairperson"><i class="fa-li fas fa-user-clock"></i><span class="title">Chairperson</span><span>{{ partial "mention" (dict "context" . "display_avatar" "false" "link_author" "false")}}</span></li>{{end}}
             </ul>
           </div>
 
@@ -80,6 +90,11 @@
               </a>
             </div>
           {{end}}
+          {{ if eq $talk.Type "break"}}
+          <div class="workshop-talk"  style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
+            <h4>{{$talk.Title}}</h4>
+          </div>
+          {{end}}
           {{$row_start = $row_end }}
         {{end}}
       {{end}}
@@ -87,6 +102,43 @@
   {{ end }}
 </section>
 
+
+{{ $talks := where $.Site.RegularPages "Type" "talk"}}
+{{ $breaks := where $.Site.RegularPages "Type" "break"}}
+{{ $machin := slice }}
+
+<h3> DEBUG</h3>
+
+<h3> Scratch</h3>
+{{ $schedule := newScratch}}
+{{ range $st.Params.content.days }}
+  {{ $theday := .}}
+  {{ range $talks }}
+    {{if eq ((time .Date).Format "2006-01-02") $theday }}
+      <br>{{.Title}} {{.Date}}
+      {{ $schedule.SetInMap $theday ((time .Date).Format "15:04") .}}
+    {{end}}
+  {{end}}
+
+  {{ range $breaks }}
+    {{$this_break := .}}
+    {{ range .Params.dates}}
+        {{if eq ((time .start).Format "2006-01-02") $theday }}
+        <br>{{.Title}} {{.start}}
+        {{ $schedule.SetInMap $theday ((time .start).Format "15:04") $this_break}}
+      {{end}}
+    {{end}}
+  {{end}}
+{{end}}
+<br>Listing :
+{{ range $st.Params.content.days }}
+  {{ $theday := .}}
+  <br>{{ $theday }} :
+  {{$schedule_day := $schedule.Get $theday}} 
+  {{ range $thetime, $thepage :=$schedule_day}}
+    <br><a href="{{$thepage.RelPermalink}}">{{$thetime}} : {{$thepage.Title}}</a>
+  {{end}}
+{{end}}
 
 <script>
   function hideUnhide(id_to_hide) {
