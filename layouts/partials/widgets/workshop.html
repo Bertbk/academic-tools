@@ -1,155 +1,93 @@
 {{ $ := .root }}
 {{ $st := .page }}
-{{ $day := ""}}
-{{ $ntalks := 0 }}
 
-{{ $items_type := $st.Params.content.page_type | default "talk" }}
-{{ $items_days := $st.Params.content.days }}
-{{ $nrows_talk := $st.Params.content.nrows_talk | default 2 }}
-{{ $nrows_break := $st.Params.content.nrows_break | default 1 }}
+{{ $talk := $st.Params.content.page_type | default "talk" }}
+{{ $break := $st.Params.content.break_type | default "break" }}
+{{ $talks := where $.Site.RegularPages "Type" $talk}}
+{{ $breaks := where $.Site.RegularPages "Type" $break}}
 
-{{ $query := (where $.Site.RegularPages "Type" "in" $items_type).GroupByDate "2006-01-01T15:00:00+01:00" "asc"}}
+{{/* Number or row per day and per type */}}
+{{ $nrows_offet := 2 }}
+{{ $nrows := newScratch }}
+{{ $nrows.Set $talk ( $st.Params.content.nrows_talk | default 2) }}
+{{ $nrows.Set $break ($st.Params.content.nrows_break | default 1 )}}
 
-<h2> {{$st.Title}} </h2>
-{{ with $st.Content }}{{ . }}{{ end }}
-
-<nav class="workshop">
-  <ul>
-    {{ $first := true}}
-  {{ range $items_days}}
-    <li {{if $first}}class="active"{{$first = false}}{{end}}><a href="#" onclick="hideUnhide('workshop-day-{{.}}')">{{(time . ).Format "02/01/2006"}}</a></li>
-  {{end}}
-  </ul>
-</nav>
-
-
-<section class ="workshop-container">
-  {{ range $items_days }}
-    {{$day = .}}
-    {{ $nrows := 0 }}
-    {{/*TODO: add to array instead of requerying every times*/}}
-    {{ range $query }}
-      {{ $talk := index .Pages 0 }}
-      {{if eq ((time $talk.Date).Format "2006-01-02") $day }}
-        {{$nrows_ := $nrows_talk}}
-        {{with $talk.Params.nrows}}
-          {{ $nrows_ = $talk.Params.nrows }}
-        {{end}}
-        {{ $nrows = add $nrows $nrows_ }}
-      {{ end }}
-    {{ end }}
-
-    <article id="workshop-day-{{$day}}" class ="workshop-day" style="--nrows:{{$nrows}}">
-      <h3>{{ (time $day).Format "Monday 2 January 2006" }}</h3>
-      {{$row_start := 2 }}
-      {{ range $query }}
-        {{ $talk := index .Pages 0 }}
-        {{if eq ((time $talk.Date).Format "2006-01-02") $day }}
-          {{$nrows_ := $nrows_talk}}
-          {{with $talk.Params.nrows}}
-            {{ $nrows_ = $talk.Params.nrows }}
-          {{end}}
-          {{ $row_end := add $row_start $nrows_ }}
-          {{ $time_start := (time $talk.Date).Format "15:04" }}
-          {{ $room := $talk.Params.location }}
-          <div class="workshop-info" style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
-            <ul class="fa-ul">
-              <li class="workshop-time"><i class="fa-li far fa-clock"></i>{{ $time_start }}</li>
-              {{with $room }}<li><i class="fa-li fas fa-map-marker-alt"></i>{{.}}</li>{{end}}
-              {{range $talk.Params.authors}}
-                <li><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "true")}}</li>
-              {{end}}
-              {{with $talk.Params.chairperson }}<li class="workshop-chairperson"><i class="fa-li fas fa-user-clock"></i><span class="title">Chairperson</span><span>{{ partial "mention" (dict "context" . "display_avatar" "false" "link_author" "false")}}</span></li>{{end}}
-            </ul>
-          </div>
-
-          {{ if eq $talk.Type "talk"}}
-            <div class="workshop-talk"  style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
-              <a href="{{$talk.RelPermalink}}">
-                <h4>{{$talk.Title}}</h4>
-                {{$summary :=""}}
-                {{ if $talk.Params.summary }}
-                  {{ $summary = $talk.Params.summary }}
-                {{ else if $talk.Params.abstract }}
-                  {{ $summary = $talk.Params.abstract }}
-                {{ else if $talk.Summary }}
-                  {{ $summary = $talk.Content}}
-                {{ end }}
-                <p class="workshop-talk-abstract">{{$summary | plainify| emojify |truncate 50 "..."}}</p>
-                <hr>
-                <div class="workshop-talk-tags">
-                  {{range $talk.Params.tags}}
-                  <div class="workshop-talk-tag">{{.}}</div>
-                {{end}}
-                </div>
-                {{range $talk.Params.authors}}
-                  <div class="workshop-talk-speaker">
-                    {{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "false")}}
-                  </div>
-                {{end}}
-              </a>
-            </div>
-          {{end}}
-          {{ if eq $talk.Type "break"}}
-          <div class="workshop-talk"  style="--row_start:{{$row_start}};--row_end:{{$row_end}};">
-            <h4>{{$talk.Title}}</h4>
-          </div>
-          {{end}}
-          {{$row_start = $row_end }}
-        {{end}}
-      {{end}}
-    </article>
-  {{ end }}
-</section>
-
-
-{{ $talks := where $.Site.RegularPages "Type" "talk"}}
-{{ $breaks := where $.Site.RegularPages "Type" "break"}}
-{{ $machin := slice }}
-
-<h3> DEBUG</h3>
-
-<h3> Scratch</h3>
+{{/* Get Data */}}
+{{ $days := $st.Params.content.days }}
 {{ $schedule := newScratch}}
-{{ range $st.Params.content.days }}
-  {{ $theday := .}}
+{{ range $days }}
+  {{ $day := .}}
+  {{ $nrows.Set $day $nrows_offet}}
   {{ range $talks }}
-    {{if eq ((time .Date).Format "2006-01-02") $theday }}
-      <br>{{.Title}} {{.Date}}
-      {{ $schedule.SetInMap $theday ((time .Date).Format "15:04") .}}
+    {{if eq ((time .Date).Format "2006-01-02") $day }}
+      {{ $nrow_thistalk := (.Params.nrows | default ($nrows.Get $talk)) }}
+      {{ $time_thistalk := ((time .Date).Format "15:04")}}
+      {{ $schedule.SetInMap $day $time_thistalk .}} {{/* This talk must be added */}}
+      {{ $nrows.Add $day $nrow_thistalk}}  {{/* total number of row for this day */}}
     {{end}}
   {{end}}
-
+  {{/* Breaks are different, they can be multiply used */}}
   {{ range $breaks }}
     {{$this_break := .}}
-    {{ range .Params.dates}}
-        {{if eq ((time .start).Format "2006-01-02") $theday }}
-        <br>{{.Title}} {{.start}}
-        {{ $schedule.SetInMap $theday ((time .start).Format "15:04") $this_break}}
+    {{ if .Params.dates}}
+      {{ range .Params.dates}}
+          {{if eq ((time .start).Format "2006-01-02") $day }}
+            {{ $nrow_thisbreak := (.Params.nrows | default ($nrows.Get $break)) }}
+            {{ $time_thisbreak := ((time .start).Format "15:04")}}
+            {{ $schedule.SetInMap $day $time_thisbreak  $this_break}}
+            {{ $nrows.Add $day $nrow_thisbreak}}{{/* total number of row for this day */}}
+          {{end}}
+      {{end}}
+    {{else}}
+    {{/* use Date param */}}
+      {{if eq ((time .Date).Format "2006-01-02") $day }}
+        {{ $nrow_thisbreak := (.Params.nrows | default ($nrows.Get $break)) }}
+        {{ $time_thisbreak := ((time .start).Format "15:04")}}
+        {{ $schedule.SetInMap $day $time_thisbreak .}} {{/* This talk must be added */}}
+        {{ $nrows.Add $day $nrow_thisbreak}}  {{/* total number of row for this day */}}
       {{end}}
     {{end}}
   {{end}}
 {{end}}
-<br>Listing :
-{{ range $st.Params.content.days }}
-  {{ $theday := .}}
-  <br>{{ $theday }} :
-  {{$schedule_day := $schedule.Get $theday}} 
-  {{ range $thetime, $thepage :=$schedule_day}}
-    <br><a href="{{$thepage.RelPermalink}}">{{$thetime}} : {{$thepage.Title}}</a>
+
+{{/* Test */}}
+{{ range $days }}
+  {{ $day := .}}
+  <h3>Day {{$day}} ({{$nrows.Get $day}})</h3>
+  {{ $row_end := $nrows_offet}}
+  {{ $row_start := $row_end}}
+  {{ range $time, $page := ($schedule.Get $day)}}
+    {{ $type := $page.Type}}
+    {{ $nrows_thisitem := ($page.Params.nrows | default ($nrows.Get $type))}}
+    {{ $row_end = add $row_start $nrows_thisitem}}
+    <p>{{$time}} : {{$page.Title}} (nrow_start = {{$row_start}}, n_row_end = {{ $row_end }})</p>
+    {{ $row_start = $row_end}}
   {{end}}
 {{end}}
 
-<script>
-  function hideUnhide(id_to_hide) {
-    var x = document.getElementById(id_to_hide);
-    if (x.style.display === "none") {
-      x.style.display = "inline-grid";
-    } else {
-      x.style.display = "none";
-    }
-  }
-  
-  {{/* TODO: TODAY is active (if)*/}}
-</script>
+{{/* Rendering */}}
+<section class ="workshop-container">
+  {{ range $days }}
+    {{ $day := .}}
+    {{ $row_end := $nrows_offet}}
+    {{ $row_start := $row_end}}
+    <article id="workshop-day-{{$day}}" class ="workshop-day" style="--nrows:{{$nrows.Get $day}}">
+      <h3>{{ (time $day).Format "Monday 2 January 2006" }}</h3>
+      {{ range $time, $page := ($schedule.Get $day)}}
+        {{ $type := $page.Type}}
+        {{ $nrows_thisitem := ($page.Params.nrows | default ($nrows.Get $type))}}
+        {{ $row_end = add $row_start $nrows_thisitem}}
+        {{/* assign data to the page */}}
+        {{ $page.Scratch.Set "row_start" $row_start}}
+        {{ $page.Scratch.Set "row_end" $row_end}}
+        {{ $page.Scratch.Set "time" $time}}
+
+        {{ partial "workshop_info" $page }}
+        {{ partial "workshop_content" $page }}
+
+        {{ $row_start = $row_end}}
+      {{end}} {{/* end range schedule $day */}}
+    </article>
+  {{end}} {{/* end range days */}}
+</section>
 

@@ -100,7 +100,7 @@ section.workshop-container article.workshop-day div.workshop-info li.workshop-ch
 }
 
 /* Talk */
-div.workshop-talk{
+div.workshop-content-talk{
   background-color: ghostwhite;
   grid-column-start: 2;
   grid-column-end: 3;
@@ -113,42 +113,42 @@ div.workshop-talk{
   transition: all 0.2s ease-out;
 }
 
-div.workshop-talk:hover{
+div.workshop-content-talk:hover{
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-div.workshop-talk > a:first-child{
+div.workshop-content-talk > a:first-child{
   display:flex;
   flex-direction: column;
   color: black;
   height:100%;
 }
 
-div.workshop-talk > a:first-child:hover{
+div.workshop-content-talk > a:first-child:hover{
   text-decoration: none;
 }
 
-div.workshop-talk p.workshop-talk-abstract{
+div.workshop-content-talk p.workshop-content-talk-abstract{
   font-style: italic;
 }
-div.workshop-talk hr{
+div.workshop-content-talk hr{
   margin:5px auto;
   width:80%;
   opacity:0.25;
 }
-div.workshop-talk div.workshop-talk-speaker{
+div.workshop-content-talk div.workshop-content-talk-speaker{
   height:32px;
   text-align:left;
   margin-bottom:5px;
 }
 
-div.workshop-talk div.workshop-talk-tags{
+div.workshop-content-talk div.workshop-content-talk-tags{
   margin-bottom:5px;
   overflow: hidden;
   flex-grow: 1;
 }
 
-div.workshop-talk div.workshop-talk-tags div.workshop-talk-tag{
+div.workshop-content-talk div.workshop-content-talk-tags div.workshop-content-talk-tag{
   float:left;  
   padding-left:2px;
   padding-right:2px;
@@ -161,7 +161,7 @@ div.workshop-talk div.workshop-talk-tags div.workshop-talk-tag{
 }
 
 div.workshop-info img,
-div.workshop-talk div.workshop-talk-speaker img{
+div.workshop-content-talk div.workshop-content-talk-speaker img{
   display:inline-block;
   width:32px;
   height:32px;
@@ -170,6 +170,7 @@ div.workshop-talk div.workshop-talk-speaker img{
 }
 
 /* Breaks */
-div.workshop-break{
+div.workshop-content-break{
   text-align:center;
+  background-image: var(--img);
 }
