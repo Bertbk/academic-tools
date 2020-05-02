@@ -1,9 +1,8 @@
 {{ $page := .}}
 {{ $type := $page.Type}}
+{{ $id := add (add ($page.Scratch.Get "day") "-") ($page.Scratch.Get "time" )}}
 
-
-<div class="workshop-content workshop-content-{{$type}}"  style='--row_start:{{$page.Scratch.Get "row_start" }};--row_end:{{$page.Scratch.Get "row_end" }};'>
-
+<div id='{{ $id }}' class="workshop-content workshop-content-{{$type}}"  style='--row_start:{{$page.Scratch.Get "row_start" }};--row_end:{{$page.Scratch.Get "row_end" }};'>
 {{ if eq $type "talk"}}
   <a href="{{$page.RelPermalink}}">
     <h4>{{$page.Title}}</h4>
@@ -29,9 +28,20 @@
     {{end}}
   </a>
 {{end}}
-{{ if eq $page.Type "break"}}
-  <h4>{{$page.Title}} +  </h4>
-{{end}}
+  {{ if eq $page.Type "break"}}
+    <h4>{{$page.Title}}</h4>
+    {{/* set background image */}}
+    {{ $image :=""}}
+    {{ $resource := ($page.Resources.ByType "image").GetMatch "*featured*" }}
+    {{ $anchor := $page.Params.image.focal_point | default "Smart" }}
+    {{ with $resource }}
+      {{ $image = .Fill (printf "918x517 q90 %s" $anchor) }}
+    {{end}}
 
-
+    <script>
+      document.getElementById('{{$id}}').style.backgroundImage='url({{$image.RelPermalink}})'; // specify the image path here
+    </script>
+  {{end}}
 </div>
+
+
