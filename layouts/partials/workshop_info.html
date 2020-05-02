@@ -1,18 +1,19 @@
 {{ $page := .}}
 {{ $type := $page.Type}}
 
-<div class="workshop-info" style='--row_start:{{$page.Scratch.Get "row_start"}};--row_end:{{$page.Scratch.Get "row_end"}};'>
   <ul class="fa-ul">
     <li class="workshop-time"><i class="fa-li far fa-clock"></i>{{ $page.Scratch.Get "time" }}</li>
     {{with $page.Params.location  }}<li><i class="fa-li fas fa-map-marker-alt"></i>{{.}}</li>{{end}}
     {{if eq $type "talk"}}
     {{range $page.Params.authors}}
-    <li><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "true")}}</li>
+      {{ $author_scratch := newScratch }}
+      {{ $author_scratch.Set "link_author" "true"}}
+      {{ $author_scratch.Set "display_avatar" "true"}}
+      <li><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "scratch" $author_scratch)}}</li>
     {{end}}
     {{with $page.Params.chairperson }}<li class="workshop-chairperson"><i class="fa-li fas fa-user-clock"></i><span class="title">Chairperson</span><span>{{ partial "mention" (dict "context" . "display_avatar" "false" "link_author" "false")}}</span></li>{{end}}
   {{end}}
   
   </ul>
-</div> {{/*End block info*/}}
 
 

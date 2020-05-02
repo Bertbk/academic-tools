@@ -1,8 +1,7 @@
 {{ $page := .}}
 {{ $type := $page.Type}}
-{{ $id := add (add ($page.Scratch.Get "day") "-") ($page.Scratch.Get "time" )}}
+{{ $id := $page.Scratch.Get "id"}}
 
-<div id='{{ $id }}' class="workshop-content workshop-content-{{$type}}"  style='--row_start:{{$page.Scratch.Get "row_start" }};--row_end:{{$page.Scratch.Get "row_end" }};'>
 {{ if eq $type "talk"}}
   <a href="{{$page.RelPermalink}}">
     <h4>{{$page.Title}}</h4>
@@ -23,7 +22,10 @@
     </div>
     {{range $page.Params.authors}}
       <div class="workshop-talk-speaker">
-        {{ partial "mention" (dict "context" . "display_avatar" "true"  "link_author" "false")}}
+        {{ $author_scratch := newScratch }}
+        {{ $author_scratch.Set "link_author" "false"}}
+        {{ $author_scratch.Set "display_avatar" "true"}}
+        {{ partial "mention" (dict "context" . "scratch" $author_scratch)}}
       </div>
     {{end}}
   </a>
@@ -42,6 +44,6 @@
       document.getElementById('{{$id}}').style.backgroundImage='url({{$image.RelPermalink}})'; // specify the image path here
     </script>
   {{end}}
-</div>
+
 
 

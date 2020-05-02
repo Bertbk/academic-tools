@@ -1,19 +1,24 @@
 {{/*Copy of the shortcode mention of Academic Theme*/}}
 {{/* Can display (or not) profile picture (avatar) */}}
 
+{{/* options */}}
+{{ $scratch := .scratch }}
+{{ $link_author :=  eq ($scratch.Get "link_author"|default "true") "true"}}
+{{ $display_avatar := eq ($scratch.Get "display_avatar"|default "true") "true"}}
+
+{{/* context */}}
 {{ $username := .context }}
 {{ $username_url := $username | anchorize }}
 {{ $taxonomy := "authors" }}
 {{ $profile_page := site.GetPage (printf "/%s/%s" $taxonomy $username_url) }}
 {{ $name := $profile_page.Params.name | default ($username|markdownify) }}
-{{ $link_author :=  eq .link_author "true"}}
 
 {{ $avatar := ($profile_page.Resources.ByType "image").GetMatch "*avatar*" }}
 {{ $avatar_shape := site.Params.avatar.shape | default "circle" }}
 {{ if $link_author}}<a href ="{{$profile_page.RelPermalink}}">{{end}}
-{{ if and (and site.Params.avatar.gravatar $profile_page.Params.email) (eq .display_avatar "true") }}
+{{ if and (and site.Params.avatar.gravatar $profile_page.Params.email) $display_avatar }}
   <img class="avatar avatar-circle" src="https://s.gravatar.com/avatar/{{ md5 .Params.email }}?s=200')" alt="Avatar">
-{{ else if and $avatar (eq .display_avatar "true")}}
+{{ else if and $avatar $display_avatar}}
   {{ $avatar_image := $avatar.Fill "270x270 Center" }}
   <img class="avatar avatar-circle" src="{{ $avatar_image.RelPermalink }}" alt="Avatar">
 {{ end }}

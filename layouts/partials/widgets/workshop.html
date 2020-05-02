@@ -50,21 +50,6 @@
   {{end}}
 {{end}}
 
-{{/* Test */}}
-{{ range $days }}
-  {{ $day := .}}
-  <h3>Day {{$day}} ({{$nrows.Get $day}})</h3>
-  {{ $row_end := $nrows_offet}}
-  {{ $row_start := $row_end}}
-  {{ range $time, $page := ($schedule.Get $day)}}
-    {{ $type := $page.Type}}
-    {{ $nrows_thisitem := ($page.Params.nrows | default ($nrows.Get $type))}}
-    {{ $row_end = add $row_start $nrows_thisitem}}
-    <p>{{$time}} : {{$page.Title}} (nrow_start = {{$row_start}}, n_row_end = {{ $row_end }})</p>
-    {{ $row_start = $row_end}}
-  {{end}}
-{{end}}
-
 {{/* Rendering */}}
 <section class ="workshop-container">
   {{ range $days }}
@@ -77,15 +62,19 @@
         {{ $type := $page.Type}}
         {{ $nrows_thisitem := ($page.Params.nrows | default ($nrows.Get $type))}}
         {{ $row_end = add $row_start $nrows_thisitem}}
+        {{ $id := add (add $day "-") $time}}
         {{/* assign data to the page */}}
         {{ $page.Scratch.Set "row_start" $row_start}}
         {{ $page.Scratch.Set "row_end" $row_end}}
         {{ $page.Scratch.Set "time" $time}}
         {{ $page.Scratch.Set "day" $day}}
-
-        {{ partial "workshop_info" $page }}
-        {{ partial "workshop_content" $page }}
-
+        {{ $page.Scratch.Set "id" $id }}
+        <div class="workshop-info" style='--row_start:{{$row_start}};--row_end:{{$row_end}};'>
+          {{ partial "workshop_info" $page }}
+        </div>
+        <div id='{{ $id }}' class="workshop-content workshop-content-{{$type}}"  style='--row_start:{{$row_start }};--row_end:{{$row_end }};'>
+          {{ partial "workshop_content" $page }}
+        </div>
         {{ $row_start = $row_end}}
       {{end}} {{/* end range schedule $day */}}
     </article>
