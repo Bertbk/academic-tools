@@ -38,11 +38,10 @@
     {{ $anchor := $page.Params.image.focal_point | default "Smart" }}
     {{ with $resource }}
       {{ $image = .Fill (printf "918x517 q90 %s" $anchor) }}
-    {{end}}
-
     <script>
       document.getElementById('{{$id}}').style.backgroundImage='url({{$image.RelPermalink}})'; // specify the image path here
     </script>
+    {{end}}
   {{end}}
 
 

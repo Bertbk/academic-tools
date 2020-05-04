@@ -7,24 +7,24 @@
 {{ $breaks := where $.Site.RegularPages "Type" $break}}
 
 {{/* Number or row per day and per type */}}
-{{ $nrows_offet := 2 }}
+{{ $nrows_offset := 2 }}
 {{ $nrows := newScratch }}
-{{ $nrows.Set $talk ( $st.Params.content.nrows_talk | default 2) }}
-{{ $nrows.Set $break ($st.Params.content.nrows_break | default 1 )}}
+{{ $nrows.Set $talk ( $st.Params.content.nrows_talk | default 3) }}
+{{ $nrows.Set $break ($st.Params.content.nrows_break | default 2 )}}
 
 {{/* Get Data */}}
 {{ $days := $st.Params.content.days }}
 {{ $schedule := newScratch}}
 {{ range $days }}
   {{ $day := .}}
-  {{ $nrows.Set $day $nrows_offet}}
+  {{ $nrows.Set $day 0}}
   {{ range $talks }}
     {{if eq ((time .Date).Format "2006-01-02") $day }}
       {{ $nrow_thistalk := (.Params.nrows | default ($nrows.Get $talk)) }}
       {{ $time_thistalk := ((time .Date).Format "15:04")}}
       {{ $schedule.SetInMap $day $time_thistalk .}} {{/* This talk must be added */}}
       {{ $nrows.Add $day $nrow_thistalk}}  {{/* total number of row for this day */}}
-    {{end}}
+      {{end}}
   {{end}}
   {{/* Breaks are different, they can be multiply used */}}
   {{ range $breaks }}
@@ -51,10 +51,17 @@
 {{end}}
 
 {{/* Rendering */}}
+<nav class="workshop">
+  <ul>
+    {{ range $day_index, $day := $days }}
+      <li id="workshop-nav-{{$day}}" class="workshop-nav btn btn-outline-primary" onclick="makeActive('{{.}}')">{{ (time $day).Format "Monday 2 January 2006" }}</li>
+    {{end}}
+  </ul>
+</nav>
 <section class ="workshop-container">
   {{ range $days }}
     {{ $day := .}}
-    {{ $row_end := $nrows_offet}}
+    {{ $row_end := $nrows_offset}}
     {{ $row_start := $row_end}}
     <article id="workshop-day-{{$day}}" class ="workshop-day" style="--nrows:{{$nrows.Get $day}}">
       <h3>{{ (time $day).Format "Monday 2 January 2006" }}</h3>
@@ -81,3 +88,46 @@
   {{end}} {{/* end range days */}}
 </section>
 
+
+<script>
+  function navDisplay(){
+    var navbuttons = document.querySelectorAll("li.workshop-nav");
+    navbuttons.forEach(function(button) {
+      if(button.classList.contains("active"))
+      {
+        button.classList.add("btn-primary");
+        button.classList.remove("btn-outline-primary");
+      }
+      else
+      {
+        button.classList.add("btn-outline-primary");
+        button.classList.remove("btn-primary");
+      }
+    });
+  }
+
+
+  function makeActive(day) {
+    nav_id = "workshop-nav-" + day;
+    article_id = "workshop-day-" + day;
+    var navbuttons = document.querySelectorAll("li.workshop-nav");
+    navbuttons.forEach(function(button){
+      if (button.id === nav_id)
+        {button.classList.add("active");}
+      else
+       {button.classList.remove("active");}
+    })
+    navDisplay();
+    var articles = document.querySelectorAll("article.workshop-day");
+    articles.forEach(function(article){
+      if (article.id === article_id) {
+        article.style.display = "inline-grid";
+      } else {
+        article.style.display = "none";
+      } 
+    })
+  }
+
+  navDisplay();
+  makeActive({{index $days 0}})
+</script>

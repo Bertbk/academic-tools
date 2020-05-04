@@ -15,26 +15,26 @@
   }
 }
 */
+
 nav.workshop ul{
   display:flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 nav.workshop li{
   display:inline-block;
-}
-
-nav.workshop li a{
   text-align: center;
   color:var(--primary);
   background-color: white;
-  font-weight: bold;
-  font-size:1em;
+  font-size:0.9em;
   border-radius: 10px;
   padding:10px;
   border: solid 2px var(--primary);
   margin-right:5px;
-} day
+  margin-left:5px;
+}
 
 nav.workshop li a:hover,
 nav.workshop li.active a{
@@ -43,10 +43,14 @@ nav.workshop li.active a{
   color:white;
 }
 
+/* Article */
+section.workshop-container{
+  text-align:center;
+}
+
 section.workshop-container article.workshop-day{
-  margin:auto;
   display: inline-grid;
-  grid-template-columns: auto 500px;
+  grid-template-columns: auto 550px;
   grid-template-rows: auto repeat(var(--nrows),5em);
   grid-gap: 0.5rem;
 }
@@ -55,7 +59,7 @@ section.workshop-container article.workshop-day h3{
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 1;
-  grid-row-end: 2 ;
+  grid-row-end: 1 ;
   margin:0px;
   text-align:center;
   color:var(--primary);
@@ -67,7 +71,7 @@ section.workshop-container article.workshop-day h3{
   border: solid 2px var(--primary);
 }
 
-/* slot */
+/* Info slots */
 section.workshop-container article.workshop-day div.workshop-info{
   grid-column-start: 1;
   grid-column-end: 2;
@@ -86,19 +90,16 @@ section.workshop-container article.workshop-day div.workshop-info ul{
   flex-direction: column;
 }
 
-
 section.workshop-container article.workshop-day div.workshop-info ul li{
   display: inline-block;
 }
 
 section.workshop-container article.workshop-day div.workshop-info ul li.workshop-chairperson{
-
 }
 
 section.workshop-container article.workshop-day div.workshop-info li.workshop-chairperson span.title{
   display: none;
 }
-
 
 div.workshop-content{
   grid-column-start: 2;
@@ -107,11 +108,12 @@ div.workshop-content{
   grid-row-end:var(--row_end);
   border-radius: 10px;
   text-align: center;
+  padding:0px;
+  background-color: ghostwhite;
 }
 
 /* Talk */
 div.workshop-content-talk{
-  background-color: ghostwhite;
   cursor: pointer;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
   transition: all 0.2s ease-out;
@@ -174,6 +176,12 @@ div.workshop-content-talk div.workshop-talk-speaker img{
 }
 
 /* Breaks */
+div.workshop-content-break{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
 div.workshop-content-break h4{
   color:var(--color, black);
   text-align:center;
