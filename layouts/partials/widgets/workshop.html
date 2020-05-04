@@ -51,6 +51,11 @@
 {{end}}
 
 {{/* Rendering */}}
+<div class="section-heading">
+  <h1>{{ with $st.Title }}{{ . | markdownify }}{{ end }}</h1>
+  {{ with $st.Params.subtitle }}<p>{{ . | markdownify }}</p>{{ end }}
+</div>
+
 <nav class="workshop">
   <ul>
     {{ range $day_index, $day := $days }}
