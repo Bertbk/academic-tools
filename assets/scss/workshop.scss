@@ -1,20 +1,23 @@
 /* Full Schedule */
 
-/*
 @media (max-width: 990px) {
-  section.workshop-container{
-    display: block;
+  section.workshop-container article.workshop-day{
+    width:100%;
+    display: inline-grid;
+    grid-template-columns: 61px auto;
+    grid-template-rows: auto repeat(var(--nrows),5em);
+    grid-gap: 0.5rem;
   }
 }
 @media (min-width: 990px) {
-  section.workshop-container{
-    display: grid;
-    grid-template-columns: repeat(auto, minmax(160px, 1fr));
-    grid-gap: 1rem;
-    grid-auto-flow: dense;
+  section.workshop-container article.workshop-day{
+    display: inline-grid;
+    grid-template-columns: auto 550px;
+    grid-template-rows: auto repeat(var(--nrows),5em);
+    grid-gap: 0.5rem;
   }
 }
-*/
+
 
 nav.workshop ul{
   display:flex;
@@ -48,12 +51,6 @@ section.workshop-container{
   text-align:center;
 }
 
-section.workshop-container article.workshop-day{
-  display: inline-grid;
-  grid-template-columns: auto 550px;
-  grid-template-rows: auto repeat(var(--nrows),5em);
-  grid-gap: 0.5rem;
-}
 
 section.workshop-container article.workshop-day h3{
   grid-column-start: 1;
@@ -77,30 +74,48 @@ section.workshop-container article.workshop-day div.workshop-info{
   grid-column-end: 2;
   grid-row-start:var(--row_start);
   grid-row-end:var(--row_end);
-  border-radius: 10px;
-  padding-left:10px;
-  padding-right:10px;
-  background-color: ghostwhite;
-  color:grey;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
 }
 
-section.workshop-container article.workshop-day div.workshop-info ul{
-  display:flex;
-  flex-direction: column;
-}
+@media (max-width: 990px) {
 
-section.workshop-container article.workshop-day div.workshop-info ul li{
-  display: inline-block;
-}
+  section.workshop-container article.workshop-day div.workshop-info ul{
+    margin-left:0px;
+  }
+  section.workshop-container article.workshop-day div.workshop-info{
+    background-color: transparent;
+    color:grey;
+    text-align:right;
+    }
 
-section.workshop-container article.workshop-day div.workshop-info ul li.workshop-chairperson{
+  section.workshop-container article.workshop-day div.workshop-info span.hour{
+    font-size:1.5em;
+  }
+  section.workshop-container article.workshop-day div.workshop-info .workshop-info-more{
+    display:none;
+  }
 }
-
-section.workshop-container article.workshop-day div.workshop-info li.workshop-chairperson span.title{
-  display: none;
+@media (min-width: 990px) {
+  section.workshop-container article.workshop-day div.workshop-info{
+    border-radius: 10px;
+    padding-left:10px;
+    padding-right:10px;
+    background-color: transparent;
+    color:grey;
+/*    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);*/
+    text-align:right;
+  }
+  
+  section.workshop-container article.workshop-day div.workshop-info span.time{
+    display:none;
+  }
+  section.workshop-container article.workshop-day div.workshop-info u li{
+  }
+  section.workshop-container article.workshop-day div.workshop-info ul li.workshop-chairperson{
+  }
+  section.workshop-container article.workshop-day div.workshop-info li.workshop-chairperson span.title{
+    display: none;
+  }
 }
-
 div.workshop-content{
   grid-column-start: 2;
   grid-column-end: 3;
@@ -112,7 +127,7 @@ div.workshop-content{
   background-color: ghostwhite;
 }
 
-/* Talk */
+/* Talk content */
 div.workshop-content-talk{
   cursor: pointer;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
@@ -134,18 +149,23 @@ div.workshop-content-talk > a:first-child:hover{
   text-decoration: none;
 }
 
-div.workshop-content-talk p.workshop-talk-abstract{
-  font-style: italic;
+div.workshop-info img,
+div.workshop-content-talk div.workshop-talk-speaker img{
+  display:inline-block;
+  width:32px;
+  height:32px;
+  margin-left:5px;
+  margin-right:5px;
 }
 div.workshop-content-talk hr{
   margin:5px auto;
   width:80%;
   opacity:0.25;
 }
-div.workshop-content-talk div.workshop-talk-speaker{
-  height:32px;
-  text-align:left;
-  margin-bottom:5px;
+
+div.workshop-content-talk p.workshop-talk-abstract{
+  font-style: italic;
+  display:none;
 }
 
 div.workshop-content-talk div.workshop-talk-tags{
@@ -166,24 +186,32 @@ div.workshop-content-talk div.workshop-talk-tags div.workshop-talk-tag{
   font-size: 0.9em;
 }
 
-div.workshop-info img,
-div.workshop-content-talk div.workshop-talk-speaker img{
-  display:inline-block;
-  width:32px;
-  height:32px;
-  margin-left:5px;
-  margin-right:5px;
+@media (max-width: 990px) {
+  div.workshop-content-talk div.workshop-talk-speaker{
+    height:32px;
+    text-align:left;
+    margin-bottom:5px;
+  }
+}
+@media (min-width: 990px) {
+
+  div.workshop-content-talk div.workshop-talk-speaker{
+    display:none;
+  }
+
+
 }
 
 /* Breaks */
 div.workshop-content-break{
   display:flex;
-  align-items: center;
-  justify-content: center;
+ /* align-items: center;
+  justify-content: center;*/
 }
 
 div.workshop-content-break h4{
-  color:var(--color, black);
-  text-align:center;
+  color:var(--color, white);
+  text-align:left;
   font-size: 1.5em;
+  text-shadow: 1px 1px 2px black;
 }

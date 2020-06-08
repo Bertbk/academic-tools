@@ -1,17 +1,18 @@
 {{ $page := .}}
 {{ $type := $page.Type}}
-
-  <ul class="fa-ul">
-    <li class="workshop-time"><i class="fa-li far fa-clock"></i>{{ $page.Scratch.Get "time" }}</li>
-    {{with $page.Params.location  }}<li><i class="fa-li fas fa-map-marker-alt"></i>{{.}}</li>{{end}}
+{{ $time := $page.Scratch.Get "time" }}
+{{ $timesplit := split $time ":"}}
+  <ul class="fa-ul" dir="rtl">
+    <li class="workshop-time"><span class="fa-li"><i class="far fa-clock workshop-info-more"></i></span><span class="hour">{{index $timesplit 0}}</span><span class="minut">:{{index $timesplit 1}}</span></li>
+    {{with $page.Params.location  }}<li class="workshop-info-more"><i class="fa-li fas fa-map-marker-alt"></i>{{.}}</li>{{end}}
     {{if eq $type "talk"}}
     {{range $page.Params.authors}}
       {{ $author_scratch := newScratch }}
       {{ $author_scratch.Set "link_author" "true"}}
       {{ $author_scratch.Set "display_avatar" "true"}}
-      <li><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "scratch" $author_scratch)}}</li>
+      <li class="workshop-info-more"><i class="fa-li fas fa-user"></i>{{ partial "mention" (dict "context" . "scratch" $author_scratch)}}</li>
     {{end}}
-    {{with $page.Params.chairperson }}<li class="workshop-chairperson"><i class="fa-li fas fa-user-clock"></i><span class="title">Chairperson</span><span>{{ partial "mention" (dict "context" . "display_avatar" "false" "link_author" "false")}}</span></li>{{end}}
+    {{with $page.Params.chairperson }}<li  class="workshop-info-more workshop-chairperson"><i class="fa-li fas fa-user-clock"></i><span class="title">Chairperson</span><span>{{ partial "mention" (dict "context" . "display_avatar" "false" "link_author" "false")}}</span></li>{{end}}
   {{end}}
   
   </ul>
