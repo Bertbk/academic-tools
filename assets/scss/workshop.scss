@@ -1,24 +1,5 @@
 /* Full Schedule */
 
-@media (max-width: 990px) {
-  section.workshop-container article.workshop-day{
-    width:100%;
-    display: inline-grid;
-    grid-template-columns: 61px auto;
-    grid-template-rows: auto repeat(var(--nrows),5em);
-    grid-gap: 0.5rem;
-  }
-}
-@media (min-width: 990px) {
-  section.workshop-container article.workshop-day{
-    display: inline-grid;
-    grid-template-columns: auto 550px;
-    grid-template-rows: auto repeat(var(--nrows),5em);
-    grid-gap: 0.5rem;
-  }
-}
-
-
 nav.workshop ul{
   display:flex;
   flex-wrap: wrap;
@@ -67,55 +48,87 @@ section.workshop-container article.workshop-day h3{
   padding:10px;
   border: solid 2px var(--primary);
 }
+/* Day */
 
-/* Info slots */
-section.workshop-container article.workshop-day div.workshop-info{
+section.workshop-container article.workshop-day{
+  display: inline-flex;
+  flex-direction: column;
+  grid-gap: 0.5rem;
+}
+
+section.workshop-container article.workshop-day h3{
+}
+/* Session */
+@media (max-width: 990px) {
+  section.workshop-container article.workshop-day section.workshop-session{
+    width:100%;
+    display: inline-grid;
+    grid-template-columns: 61px auto;
+    grid-template-rows: auto repeat(var(--nrows),2em);
+    grid-gap: 0.5rem;
+  }
+}
+@media (min-width: 990px) {
+  section.workshop-container article.workshop-day section.workshop-session{
+    display: inline-grid;
+    grid-template-columns: auto 550px;
+    grid-template-rows: auto auto repeat(var(--nrows),2em);
+    grid-gap: 0.5rem;
+    border: solid 2px var(--primary);
+    border-radius: 10px;
+    padding:10px;
+    }
+}
+
+section.workshop-session  h4{
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 1 ;
+  margin:0px;
+  text-align:left;
+  color:black;/*var(--primary);*/
+  font-weight: bold;
+  font-size:1em;
+}
+
+section.workshop-session ul.workshop-session-info{
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  margin-top:0px;
+  margin-bottom:0px;
+  list-style: none;
+  padding-left:0px;
+}
+
+section.workshop-session ul.workshop-session-info li{
+  float:left;
+}
+
+section.workshop-session ul.workshop-session-info li:not(:first-child):before {
+  content: '\00a0\00a0\b7\a0\00a0\00a0'; /*space and middot*/
+}
+
+
+section.workshop-container article.workshop-day section.workshop-session div.workshop-session-time{
+  color:grey;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start:var(--row_start);
   grid-row-end:var(--row_end);
 }
-
-@media (max-width: 990px) {
-
-  section.workshop-container article.workshop-day div.workshop-info ul{
-    margin-left:0px;
-  }
-  section.workshop-container article.workshop-day div.workshop-info{
-    background-color: transparent;
-    color:grey;
-    text-align:right;
-    }
-
-  section.workshop-container article.workshop-day div.workshop-info span.hour{
-    font-size:1.5em;
-  }
-  section.workshop-container article.workshop-day div.workshop-info .workshop-info-more{
-    display:none;
-  }
+section.workshop-container article.workshop-day section.workshop-session span.hour{
+  color:grey;
+  font-size:1.5em;
 }
-@media (min-width: 990px) {
-  section.workshop-container article.workshop-day div.workshop-info{
-    border-radius: 10px;
-    padding-left:10px;
-    padding-right:10px;
-    background-color: transparent;
-    color:grey;
-/*    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);*/
-    text-align:right;
-  }
-  
-  section.workshop-container article.workshop-day div.workshop-info span.time{
-    display:none;
-  }
-  section.workshop-container article.workshop-day div.workshop-info u li{
-  }
-  section.workshop-container article.workshop-day div.workshop-info ul li.workshop-chairperson{
-  }
-  section.workshop-container article.workshop-day div.workshop-info li.workshop-chairperson span.title{
-    display: none;
-  }
+
+section.workshop-container article.workshop-day div.workshop-info .workshop-info-more,
+section.workshop-container article.workshop-day li.workshop-session-chairperson span.title{
+  display: none;
 }
+
 div.workshop-content{
   grid-column-start: 2;
   grid-column-end: 3;
@@ -139,79 +152,50 @@ div.workshop-content-talk:hover{
 }
 
 div.workshop-content-talk > a:first-child{
-  display:flex;
-  flex-direction: column;
   color: black;
   height:100%;
+  display:block;
+  margin-top:0px;
+  padding:10px;
 }
 
 div.workshop-content-talk > a:first-child:hover{
   text-decoration: none;
 }
+div.workshop-content-talk h5{
+  text-align:left;
+  margin-top:0px;
+}
+div.workshop-content-talk h5 span.workshop-talk-speaker{
+  font-weight: normal;
+  font-size:0.8rem;
+  float:right;
+  margin:5px;
+}
+
 
 div.workshop-info img,
-div.workshop-content-talk div.workshop-talk-speaker img{
+ul.workshop-session-info li.workshop-session-chairperson img,
+div.workshop-content-talk h5 span.workshop-talk-speaker img{
   display:inline-block;
   width:32px;
   height:32px;
   margin-left:5px;
   margin-right:5px;
 }
-div.workshop-content-talk hr{
-  margin:5px auto;
-  width:80%;
-  opacity:0.25;
-}
-
-div.workshop-content-talk p.workshop-talk-abstract{
-  font-style: italic;
-  display:none;
-}
-
-div.workshop-content-talk div.workshop-talk-tags{
-  margin-bottom:5px;
-  overflow: hidden;
-  flex-grow: 1;
-}
-
-div.workshop-content-talk div.workshop-talk-tags div.workshop-talk-tag{
-  float:left;  
-  padding-left:2px;
-  padding-right:2px;
-  margin:2px;
-  border-radius: 5px;
-  min-width: 50px;
-  color:var(--primary);
-  border: var(--primary) solid 1px;
-  font-size: 0.9em;
-}
-
-@media (max-width: 990px) {
-  div.workshop-content-talk div.workshop-talk-speaker{
-    height:32px;
-    text-align:left;
-    margin-bottom:5px;
-  }
-}
-@media (min-width: 990px) {
-
-  div.workshop-content-talk div.workshop-talk-speaker{
-    display:none;
-  }
-
-
-}
 
 /* Breaks */
 div.workshop-content-break{
   display:flex;
- /* align-items: center;
-  justify-content: center;*/
+  align-items: center;
+  padding:10px;
+/*  justify-content: center;*/
 }
 
-div.workshop-content-break h4{
+div.workshop-content-break h5{
   color:var(--color, white);
   text-align:left;
-  font-size: 1.5em;
+  font-size: 1.2em;
   text-shadow: 1px 1px 2px black;
+  margin-top:0px;
 }

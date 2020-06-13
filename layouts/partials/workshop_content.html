@@ -1,48 +1,41 @@
 {{ $page := .}}
 {{ $type := $page.Type}}
 {{ $id := $page.Scratch.Get "id"}}
+{{ $row_start := $page.Scratch.Get "row_start"}}
+{{ $row_end := $page.Scratch.Get "row_end"}}
+{{ $time := $page.Scratch.Get "time" }}
+{{ $timesplit := split $time ":"}}
+{{ if eq $type "talk"}}
+<a href="{{$page.RelPermalink}}">
+{{end}}
 
 {{ if eq $type "talk"}}
-  <a href="{{$page.RelPermalink}}">
-    <h4>{{$page.Title}}</h4>
-    {{$summary :=""}}
-    {{ if $page.Params.summary }}
-      {{ $summary = $page.Params.summary }}
-    {{ else if $page.Params.abstract }}
-      {{ $summary = $page.Params.abstract }}
-    {{ else if $page.Summary }}
-      {{ $summary = $page.Content}}
-    {{ end }}
-    <p class="workshop-talk-abstract">{{$summary | plainify| emojify |truncate 50 "..."}}</p>
-    <hr>
-    <div class="workshop-talk-tags">
-      {{range $page.Params.tags}}
-      <div class="workshop-talk-tag">{{.}}</div>
-    {{end}}
-    </div>
-    {{range $page.Params.authors}}
-      <div class="workshop-talk-speaker">
-        {{ $author_scratch := newScratch }}
-        {{ $author_scratch.Set "link_author" "false"}}
-        {{ $author_scratch.Set "display_avatar" "true"}}
-        {{ partial "mention" (dict "context" . "scratch" $author_scratch)}}
-      </div>
-    {{end}}
-  </a>
-{{end}}
-  {{ if eq $page.Type "break"}}
-    <h4>{{$page.Title}}</h4>
-    {{/* set background image */}}
-    {{ $image :=""}}
-    {{ $resource := ($page.Resources.ByType "image").GetMatch "*featured*" }}
-    {{ $anchor := $page.Params.image.focal_point | default "Smart" }}
-    {{ with $resource }}
-      {{ $image = .Fill (printf "918x517 q90 %s" $anchor) }}
-    <script>
-      document.getElementById('{{$id}}').style.backgroundImage='url({{$image.RelPermalink}})'; // specify the image path here
-    </script>
-    {{end}}
+<h5><span class="workshop-talk-title">{{$page.Title}}</span>
+  {{range $page.Params.authors}}
+    <span class="workshop-talk-speaker">
+      {{ $author_scratch := newScratch }}
+      {{ $author_scratch.Set "link_author" "false"}}
+      {{ $author_scratch.Set "display_avatar" "true"}}
+      {{ partial "mention" (dict "context" . "scratch" $author_scratch)}}
+    </span>
   {{end}}
-
+</h5>
+{{end}}
+{{ if eq $page.Type "break"}}
+  <h5>{{$page.Title}}</h5>
+  {{/* set background image */}}
+  {{ $image :=""}}
+  {{ $resource := ($page.Resources.ByType "image").GetMatch "*featured*" }}
+  {{ $anchor := $page.Params.image.focal_point | default "Smart" }}
+  {{ with $resource }}
+    {{ $image = .Fill (printf "918x517 q90 %s" $anchor) }}
+  <script>
+    document.getElementById('{{$id}}').style.backgroundImage='url({{$image.RelPermalink}})'; // specify the image path here
+  </script>
+  {{end}}
+{{end}}
+{{ if eq $type "talk"}}
+</a>
+{{end}}
 
 
