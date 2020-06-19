@@ -30,6 +30,7 @@ nav.workshop li.active a{
 /* Day */
 article.workshop-day{
   display:none;
+  text-align:center;
 }
 article.workshop-day.active{
   display:block;
@@ -38,9 +39,18 @@ article.workshop-day.active{
 article.workshop-day{
   width:100%;
 }
-@media  (max-width:1200px) {
+
+@media  (max-width:768px) {
   article.workshop-day h3{  
     width:100%;
+    margin:auto;
+  }
+}
+
+@media  (min-width:768px) and (max-width:1200px) {
+  article.workshop-day h3{  
+    width:690px;
+    margin:auto;
   }
 }
 @media  (min-width:1200px) {
@@ -72,23 +82,39 @@ article.workshop-day div.session-container{
 }
 
 /* Session */
+
+
+article.workshop-day section.workshop-session{
+  display: inline-grid;
+  grid-template-rows: repeat(var(--nrows),minmax(2em,auto));
+  grid-gap: 0.5rem;
+  padding:10px;
+}
 @media  (max-width:1200px) {
   article.workshop-day section.workshop-session{
+    grid-template-columns: 57px auto;
+  }
+}
+@media  (min-width:1200px) {
+  article.workshop-day section.workshop-session{
+    grid-template-columns: 57px minmax(auto, 483px);
+    }
+}
+@media  (max-width:768px) {
+  article.workshop-day section.workshop-session{
+    width:100%;
+  }
+}
+@media  (min-width:768px) and (max-width:1200px) {
+  article.workshop-day section.workshop-session{
     margin:auto;
-    width:auto;
+    width:690px;
   }
 }
 @media  (min-width:1200px) {
   article.workshop-day section.workshop-session{
     order:var(--order);
   }
-}
-article.workshop-day section.workshop-session{
-    display: inline-grid;
-    grid-template-columns: 57px 483px;
-    grid-template-rows: repeat(var(--nrows),2em);
-    grid-gap: 0.5rem;
-    padding:10px;
 }
 
 article.workshop-day section.workshop-session{
