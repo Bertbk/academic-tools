@@ -17,21 +17,32 @@
 {{/* Get Data */}}
 {{ $days := $st.Params.day }}
 {{ $schedule := newScratch}}
+{{ $first_day := ""}}
 {{ range  $days}}
   {{ $day := .date}}
+  {{ if eq $first_day ""}}{{$first_day = .date}}{{end}}
   {{ range $session_index, $session := .session}}
     {{ $session_id := printf "%s-%d" $day $session_index }}
+    {{if eq $session.type "talk"}}
+      {{ if and $session.title (not (eq $session.title ""))}}
+        {{ $nrows.Add $session_id 1}}{{/* total number of row for this session */}}
+      {{end}}
+      {{ if or $session.location (or $session.chairperson $session.time_start)}}
+        {{ $nrows.Add $session_id 1}}{{/* total number of row for this session */}}
+      {{end}}
       {{ range $talks }}
         {{if eq ((time .Date).Format "2006-01-02") $day }}
           {{ $nrow_thistalk := (.Params.nrows | default ($nrows.Get $talk)) }}
           {{ $time_thistalk := ((time .Date).Format "15:04")}}
-          {{if and (ge $time_thistalk $session.time_start) (ge $session.time_end $time_thistalk )}}
+          {{ $time_thistalk_end := ((time .Params.date_end).Format "15:04")}}
+          {{if and (ge $time_thistalk $session.time_start) (ge $session.time_end $time_thistalk_end )}}
             {{ $schedule.SetInMap $session_id $time_thistalk .}} {{/* This talk must be added */}}
             {{ $nrows.Add $session_id $nrow_thistalk}}{{/* total number of row for this session */}}
           {{end}}
         {{end}}
+      {{end}}
     {{end}}
-      {{/* Breaks are different, they can be multiply used */}}
+    {{/* Breaks are different, they can be multiply used */}}
     {{ range $breaks }}
       {{$this_break := .}}
       {{ if .Params.dates}}
@@ -39,7 +50,8 @@
             {{if eq ((time .start).Format "2006-01-02") $day }}
               {{ $nrow_thisbreak := (.Params.nrows | default ($nrows.Get $break)) }}
               {{ $time_thisbreak := ((time .start).Format "15:04")}}
-              {{if and (ge $time_thisbreak $session.time_start) (ge $session.time_end $time_thisbreak )}}
+              {{ $time_thisbreak_end := ((time .end).Format "15:04")}}
+              {{if and (ge $time_thisbreak $session.time_start) (ge $session.time_end $time_thisbreak_end )}}
                 {{ $schedule.SetInMap $session_id $time_thisbreak  $this_break}}
                 {{ $nrows.Add $session_id $nrow_thisbreak}}{{/* total number of row for this session */}}
               {{ end }}
@@ -50,7 +62,8 @@
         {{if eq ((time .Date).Format "2006-01-02") $day }}
           {{ $nrow_thisbreak := (.Params.nrows | default ($nrows.Get $break)) }}
           {{ $time_thisbreak := ((time .start).Format "15:04")}}
-          {{if and (ge $time_thisbreak $session.time_start) (ge $session.time_end $time_thisbreak )}}
+          {{ $time_thisbreak_end := ((time .end).Format "15:04")}}
+          {{if and (ge $time_thisbreak $session.time_start) (ge $session.time_end $time_thisbreak_end )}}
             {{ $schedule.SetInMap $session_id $time_thisbreak .}} {{/* This talk must be added */}}
             {{ $nrows.Add $session_id $nrow_thisbreak}}  {{/* total number of row for this session */}}
           {{ end }}
@@ -61,64 +74,70 @@
 {{end}}
 
 {{/* Rendering */}}
+
 <div class="section-heading">
   <h1>{{ with $st.Title }}{{ . | markdownify }}{{ end }}</h1>
   {{ with $st.Params.subtitle }}<p>{{ . | markdownify }}</p>{{ end }}
 </div>
 
-<nav class="workshop">
+  <nav class="workshop">
   <ul>
     {{ range $day_index, $day := $days }}
-      <li id="workshop-nav-{{$day.date}}" class="workshop-nav btn btn-outline-primary" onclick="makeActive('{{.}}')">{{ (time $day.date).Format "Monday 2 January 2006" }}</li>
+      <li id="workshop-nav-{{$day.date}}" class="workshop-nav btn btn-outline-primary" onclick="makeActive('{{$day.date}}')">{{ (time $day.date).Format "Monday 2 January 2006" }}</li>
     {{end}}
   </ul>
 </nav>
-<section class ="workshop-container">
-  {{ range $days }}
-    {{ $day := .date}}
-    <article id="workshop-day-{{$day}}" class ="workshop-day">
-      <h3>{{ (time $day).Format "Monday 2 January 2006" }}</h3>
-      {{ range $session_index, $session := .session}}
-        {{ $row_end := $nrows_offset}}
-        {{ $row_start := $row_end}}
-        {{ $session_id := printf "%s-%d" $day $session_index }}
-        {{ $session_time_startsplit := split $session.time_start ":"}}
-        {{ $session_time_endsplit := split $session.time_end ":"}}
-        <section id="workshop-session-{{$session_id}}" class="workshop-session"  style="--nrows:{{$nrows.Get $session_id}}">
-          <h4>{{ $session.title }}</h4>
-          <ul class="workshop-session-info">
+{{ range $days }}
+  {{ $day := .date}}
+  <article id="workshop-day-{{$day}}" class ="workshop-day">
+    <h3>{{ (time $day).Format "Monday 2 January 2006" }}</h3>
+    <div class="session-container">
+    {{ range $session_index, $session := .session}}
+      {{ $row_end := 1}}
+      {{ $row_start := $row_end}}
+      {{ $session_id := printf "%s-%d" $day $session_index }}
+      {{ $session_time_startsplit := split $session.time_start ":"}}
+      {{ $session_time_endsplit := split $session.time_end ":"}}
+      {{ $session_color := $session.color | default "black"}}
+      <section id="workshop-session-{{$session_id}}" class="workshop-session workshop-session-{{$session.type}}"  style="--nrows:{{$nrows.Get $session_id}};--color_session:{{ $session_color}}">
+        {{if eq $session.type "talk"}}
+          {{ if and $session.title (not (eq $session.title ""))}} 
+            {{ $row_end = add $row_start 1}}
+            <h4 style='--row_start:{{$row_start}};--row_end:{{$row_end}};'>{{ $session.title }}</h4>
+            {{ $row_start = $row_end}}
+          {{ end }}
+          {{ $row_end = add $row_start 1}}
+          <ul class="workshop-session-info"  style='--row_start:{{$row_start}};--row_end:{{$row_end}};'>
             {{with $session.location  }}<li><i class="fas fa-map-marker-alt"></i> <span style="display:none">Location: </span>{{.}}</li>{{end}}
             <li><i class="fas fa-clock"></i> <span style="display:none">Time: </span>{{index $session_time_startsplit 0}}:{{index $session_time_startsplit 1}} - {{index $session_time_endsplit 0}}:{{index $session_time_endsplit 1}}</li>
             {{with $session.chairperson }}<li  class="workshop-session-chairperson"><i class="fas fa-user-clock"></i> <span class="title">Chairperson</span><span>{{ partial "mention" (dict "context" . "display_avatar" "false" "link_author" "false")}}</span></li>{{end}}
           </ul>
-          {{ range $time, $page := ($schedule.Get $session_id)}}
-            {{ $type := $page.Type}}
-            {{ $nrows_thisitem := ($page.Params.nrows | default ($nrows.Get $type))}}
-            {{ $row_end = add $row_start $nrows_thisitem}}
-            {{ $id := add (add $day "-") $time}}
-            {{/* assign data to the page */}}
-            {{ $page.Scratch.Set "row_start" $row_start}}
-            {{ $page.Scratch.Set "row_end" $row_end}}
-            {{ $page.Scratch.Set "time" $time}}
-            {{ $timesplit := split $time ":"}}
-            {{ $page.Scratch.Set "day" $day}}
-            {{ $page.Scratch.Set "id" $id }}
-{{/*            <div class="workshop-info" style='--row_start:{{$row_start}};--row_end:{{$row_end}};'>
-              {{ partial "workshop_info" $page }}
-            </div>*/}}
-            <div class="workshop-session-time" style='--row_start:{{$row_start}};--row_end:{{$row_end}};'>
-              <span class="hour">{{index $timesplit 0}}</span><span class="minut">:{{index $timesplit 1}}</span>
-            </div>
-            <div id='{{ $id }}' class="workshop-content workshop-content-{{$type}}"  style='--row_start:{{$row_start }};--row_end:{{$row_end }};'>
-              {{ partial "workshop_content" $page }}
-            </div>
-            {{ $row_start = $row_end}}
-          {{end}} {{/* end range schedule $day */}}
-        </section>
-      {{end}}
-    </article>
-  {{end}} {{/* end range days */}}
-</section>
+          {{ $row_start = $row_end}}
+        {{end}}
+        {{ range $time, $page := ($schedule.Get $session_id)}}
+          {{ $type := $page.Type}}
+          {{ $nrows_thisitem := ($page.Params.nrows | default ($nrows.Get $type))}}
+          {{ $row_end = add $row_start $nrows_thisitem}}
+          {{ $id := add (add $day "-") $time}}
+          {{/* assign data to the page */}}
+          {{ $page.Scratch.Set "row_start" $row_start}}
+          {{ $page.Scratch.Set "row_end" $row_end}}
+          {{ $page.Scratch.Set "time" $time}}
+          {{ $timesplit := split $time ":"}}
+          {{ $page.Scratch.Set "day" $day}}
+          {{ $page.Scratch.Set "id" $id }}
+          <div class="workshop-session-time" style='--row_start:{{$row_start}};--row_end:{{$row_end}};'>
+            <span class="hour">{{index $timesplit 0}}</span><span class="minut">:{{index $timesplit 1}}</span>
+          </div>
+          <div id='{{ $id }}' class="workshop-content workshop-content-{{$type}}"  style='--row_start:{{$row_start }};--row_end:{{$row_end }};'>
+            {{ partial "workshop_content" $page }}
+          </div>
+          {{ $row_start = $row_end}}
+        {{end}} {{/* end range schedule $day */}}
+      </section>
+    {{end}}
+  </article>
+{{end}} {{/* end range days */}}
 
 
 <script>
@@ -138,28 +157,20 @@
     });
   }
 
-
   function makeActive(day) {
     nav_id = "workshop-nav-" + day;
     article_id = "workshop-day-" + day;
-    var navbuttons = document.querySelectorAll("li.workshop-nav");
-    navbuttons.forEach(function(button){
-      if (button.id === nav_id)
-        {button.classList.add("active");}
-      else
-       {button.classList.remove("active");}
-    })
+    var navbutton = document.getElementById(nav_id);
+    isActive = navbutton.classList.contains("active");
+    if(isActive){navbutton.classList.remove("active");}
+    else{navbutton.classList.add("active");}
     navDisplay();
-    var articles = document.querySelectorAll("article.workshop-day");
-    articles.forEach(function(article){
-      if (article.id === article_id) {
-        article.style.display = "inline-grid";
-      } else {
-        article.style.display = "none";
-      } 
-    })
+    var article = document.getElementById(article_id);
+    if(isActive){article.classList.remove("active");}
+    else{article.classList.add("active");}
+
   }
 
   navDisplay();
- {{/* makeActive({{index $days 0}})*/}}
+  makeActive({{$first_day}})
 </script>

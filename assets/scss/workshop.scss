@@ -27,17 +27,29 @@ nav.workshop li.active a{
   color:white;
 }
 
-/* Article */
-section.workshop-container{
-  text-align:center;
+/* Day */
+article.workshop-day{
+  display:none;
+}
+article.workshop-day.active{
+  display:block;
 }
 
-
-section.workshop-container article.workshop-day h3{
-  grid-column-start: 1;
-  grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 1 ;
+article.workshop-day{
+  width:100%;
+}
+@media  (max-width:1200px) {
+  article.workshop-day h3{  
+    width:100%;
+  }
+}
+@media  (min-width:1200px) {
+  article.workshop-day h3{  
+    width:100%;
+  }
+}
+article.workshop-day h3{  
+  display:inline-block;
   margin:0px;
   text-align:center;
   color:var(--primary);
@@ -47,44 +59,55 @@ section.workshop-container article.workshop-day h3{
   border-radius: 10px;
   padding:10px;
   border: solid 2px var(--primary);
-}
-/* Day */
-
-section.workshop-container article.workshop-day{
-  display: inline-flex;
-  flex-direction: column;
-  grid-gap: 0.5rem;
+  margin-bottom:0.5rem;
 }
 
-section.workshop-container article.workshop-day h3{
-}
-/* Session */
-@media (max-width: 990px) {
-  section.workshop-container article.workshop-day section.workshop-session{
+/* Session container */
+@media (max-width:1200px) {
+  article.workshop-day div.session-container{
     width:100%;
-    display: inline-grid;
-    grid-template-columns: 61px auto;
-    grid-template-rows: auto repeat(var(--nrows),2em);
-    grid-gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
-@media (min-width: 990px) {
-  section.workshop-container article.workshop-day section.workshop-session{
-    display: inline-grid;
-    grid-template-columns: auto 550px;
-    grid-template-rows: auto auto repeat(var(--nrows),2em);
-    grid-gap: 0.5rem;
-    border: solid 2px var(--primary);
-    border-radius: 10px;
-    padding:10px;
-    }
+
+@media (min-width: 1200px) {
+  article.workshop-day div.session-container{
+    width:100%;
+    display: flex;
+    flex-wrap:wrap;
+    height:420px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
-section.workshop-session  h4{
+/* Session */
+@media  (max-width:1200px) {
+  article.workshop-day section.workshop-session{
+    margin:auto;
+    width:auto;
+  }
+}
+article.workshop-day section.workshop-session{
+    display: inline-grid;
+    grid-template-columns: 57px 483px;
+    grid-template-rows: repeat(var(--nrows),2em);
+    grid-gap: 0.5rem;
+    padding:10px;
+}
+
+article.workshop-day section.workshop-session{
+  border-left: solid 6px var(--color_session);
+}
+
+
+  section.workshop-session  h4{
   grid-column-start: 1;
   grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 1 ;
+  grid-row-start:var(--row_start);
+  grid-row-end:var(--row_end);
   margin:0px;
   text-align:left;
   color:black;/*var(--primary);*/
@@ -95,8 +118,8 @@ section.workshop-session  h4{
 section.workshop-session ul.workshop-session-info{
   grid-column-start: 1;
   grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start:var(--row_start);
+  grid-row-end:var(--row_end);
   margin-top:0px;
   margin-bottom:0px;
   list-style: none;
@@ -112,20 +135,20 @@ section.workshop-session ul.workshop-session-info li:not(:first-child):before {
 }
 
 
-section.workshop-container article.workshop-day section.workshop-session div.workshop-session-time{
+article.workshop-day section.workshop-session div.workshop-session-time{
   color:grey;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start:var(--row_start);
   grid-row-end:var(--row_end);
 }
-section.workshop-container article.workshop-day section.workshop-session span.hour{
+article.workshop-day section.workshop-session span.hour{
   color:grey;
   font-size:1.5em;
 }
 
-section.workshop-container article.workshop-day div.workshop-info .workshop-info-more,
-section.workshop-container article.workshop-day li.workshop-session-chairperson span.title{
+article.workshop-day div.workshop-info .workshop-info-more,
+article.workshop-day li.workshop-session-chairperson span.title{
   display: none;
 }
 
