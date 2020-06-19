@@ -63,24 +63,12 @@ article.workshop-day h3{
 }
 
 /* Session container */
-@media (max-width:1200px) {
-  article.workshop-day div.session-container{
-    width:100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-@media (min-width: 1200px) {
-  article.workshop-day div.session-container{
-    width:100%;
-    display: flex;
-    flex-wrap:wrap;
-    height:420px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+article.workshop-day div.session-container{
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap:wrap;
 }
 
 /* Session */
@@ -88,6 +76,11 @@ article.workshop-day h3{
   article.workshop-day section.workshop-session{
     margin:auto;
     width:auto;
+  }
+}
+@media  (min-width:1200px) {
+  article.workshop-day section.workshop-session{
+    order:var(--order);
   }
 }
 article.workshop-day section.workshop-session{

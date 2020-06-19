@@ -7,21 +7,21 @@
 {{ $breaks := where $.Site.RegularPages "Type" $break}}
 
 {{/* Number or row per day and per type */}}
-{{ $nrows_offset := 3 }}
 {{ $nrows := newScratch }}
 {{ $nrows.Set $talk ( $st.Params.content.nrows_talk | default 2) }}
 {{ $nrows.Set $break ($st.Params.content.nrows_break | default 1 )}}
 
-
-
 {{/* Get Data */}}
 {{ $days := $st.Params.day }}
 {{ $schedule := newScratch}}
+{{ $nsessions := newScratch}}
 {{ $first_day := ""}}
 {{ range  $days}}
   {{ $day := .date}}
+  {{ $nsessions.Set $day 0}}
   {{ if eq $first_day ""}}{{$first_day = .date}}{{end}}
   {{ range $session_index, $session := .session}}
+    {{ $nsessions.Add $day 1}}
     {{ $session_id := printf "%s-%d" $day $session_index }}
     {{if eq $session.type "talk"}}
       {{ if and $session.title (not (eq $session.title ""))}}
@@ -73,6 +73,17 @@
   {{end}}
 {{end}}
 
+{{/* Store the "middle" session of every day*/}}
+{{/*usefull for ordering for XL screen (2columns)*/}}
+  {{ range  $days}}
+  {{ $day := .date}}
+  {{ $day_middle :=  printf "%s-middle" $day }}
+  {{ $nsessions.Set $day_middle  (div ($nsessions.Get $day) 2)}}
+  {{ if (gt (mod ($nsessions.Get $day) 2) 0)}}
+    {{ $nsessions.Add $day_middle 1}}
+  {{ end }}
+{{end}}
+
 {{/* Rendering */}}
 
 <div class="section-heading">
@@ -99,7 +110,15 @@
       {{ $session_time_startsplit := split $session.time_start ":"}}
       {{ $session_time_endsplit := split $session.time_end ":"}}
       {{ $session_color := $session.color | default "black"}}
-      <section id="workshop-session-{{$session_id}}" class="workshop-session workshop-session-{{$session.type}}"  style="--nrows:{{$nrows.Get $session_id}};--color_session:{{ $session_color}}">
+      {{ $session_order := $session_index}}
+      {{ $day_middle :=  printf "%s-middle" $day }}
+      {{ $session_middle := $nsessions.Get $day_middle}}
+      {{ if (le (add $session_index 1) $session_middle )}}
+        {{$session_order = sub (mul (add $session_index 1) 2)  1}}
+      {{else}}
+        {{$session_order = mul 2 (sub (add $session_index 1) $session_middle)}}
+      {{end}}
+      <section id="workshop-session-{{$session_id}}" class="workshop-session workshop-session-{{$session.type}}"  style="--nrows:{{$nrows.Get $session_id}};--color_session:{{ $session_color}};--order:{{$session_order}};">
         {{if eq $session.type "talk"}}
           {{ if and $session.title (not (eq $session.title ""))}} 
             {{ $row_end = add $row_start 1}}
