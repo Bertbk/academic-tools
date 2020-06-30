@@ -94,7 +94,7 @@
   <nav class="workshop">
   <ul>
     {{ range $day_index, $day := $days }}
-      <li id="workshop-nav-{{$day.date}}" class="workshop-nav btn btn-outline-primary" onclick="makeActive('{{$day.date}}')">{{ (time $day.date).Format "Monday 2 January 2006" }}</li>
+      <li id="workshop-nav-{{$day.date}}" class="workshop-nav btn btn-outline-primary" onclick="makeActive('{{$day.date}}')"><span class="xs">{{ (time $day.date).Format "02/01/2006" }}</span><span class="xl">{{ (time $day.date).Format "Monday 2 January 2006" }}</span></li>
     {{end}}
   </ul>
 </nav>

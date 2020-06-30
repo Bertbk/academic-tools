@@ -27,6 +27,17 @@ nav.workshop li.active a{
   color:white;
 }
 
+@media  (max-width:768px){
+  nav.workshop li.workshop-nav span.xl{
+    display:none;
+  }
+}
+@media  (min-width:768px) {
+  nav.workshop li.workshop-nav span.xs{
+  display:none;
+  }
+}
+
 /* Day */
 article.workshop-day{
   display:none;
