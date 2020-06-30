@@ -179,16 +179,23 @@
   function makeActive(day) {
     nav_id = "workshop-nav-" + day;
     article_id = "workshop-day-" + day;
-    var navbutton = document.getElementById(nav_id);
-    isActive = navbutton.classList.contains("active");
-    if(isActive){navbutton.classList.remove("active");}
-    else{navbutton.classList.add("active");}
+    makeAllInactive();
+    document.getElementById(nav_id).classList.add("active");
     navDisplay();
-    var article = document.getElementById(article_id);
-    if(isActive){article.classList.remove("active");}
-    else{article.classList.add("active");}
-
+    document.getElementById(article_id).classList.add("active");
   }
+
+  function makeAllInactive() {
+    var navbuttons = document.querySelectorAll("li.workshop-nav");
+    navbuttons.forEach(function(button) {
+        button.classList.remove("active");
+    });
+    var navarticles = document.querySelectorAll("article.workshop-day");
+    navarticles.forEach(function(article) {
+      article.classList.remove("active");
+    });
+  }
+
 
   navDisplay();
   makeActive({{$first_day}})
