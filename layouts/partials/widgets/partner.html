@@ -1,0 +1,34 @@
+{{ $ := .root }}
+{{ $st := .page }}
+
+{{ $partners := where $.Site.RegularPages "Type" ($st.Params.content.page_type | default "partner") }}
+
+{{/* Rendering */}}
+<div class="partner">
+  <div class="section-heading">
+    <h1>{{ with $st.Title }}{{ . | markdownify }}{{ end }}</h1>
+    {{ with $st.Params.subtitle }}<p>{{ . | markdownify }}</p>{{ end }}
+  </div>
+
+  <ul class="partner-container">
+  {{ range $partners }}
+    {{ $img := (.Resources.ByType "image").GetMatch "**" }}
+    {{ $link := .Params.external_link | default ""}}
+    {{ $target := ""}}
+    <li>
+      {{if not (eq $link "") }}
+      <a href="{{ $link }}" {{ $target | safeHTMLAttr }} class="card-image hover-overlay">
+      {{end}}
+      {{ if $img }}
+        {{ $image := $img.Fit "200x120" }}
+          <img src="{{ $image.RelPermalink }}" alt="{{.Title}}" class="img-responsive">
+      {{else}}
+        {{.Title}}
+      {{ end }}
+      {{if not (eq $link "") }}
+      </a>
+      {{end}}
+    </li>
+  {{end}}
+  </ul>
+</div>
