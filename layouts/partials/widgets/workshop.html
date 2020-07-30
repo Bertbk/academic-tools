@@ -74,15 +74,15 @@
 {{end}}
 
 {{/* Store the "middle" session of every day*/}}
-{{/*usefull for ordering for XL screen (2columns)*/}}
+{{/*usefull for ordering for XL screen + 2 columns*/}}
   {{ range  $days}}
-  {{ $day := .date}}
-  {{ $day_middle :=  printf "%s-middle" $day }}
-  {{ $nsessions.Set $day_middle  (div ($nsessions.Get $day) 2)}}
-  {{ if (gt (mod ($nsessions.Get $day) 2) 0)}}
-    {{ $nsessions.Add $day_middle 1}}
-  {{ end }}
-{{end}}
+    {{ $day := .date}}
+    {{ $day_middle :=  printf "%s-middle" $day }}
+    {{ $nsessions.Set $day_middle  (div ($nsessions.Get $day) 2)}}
+    {{ if (gt (mod ($nsessions.Get $day) 2) 0)}}
+      {{ $nsessions.Add $day_middle 1}}
+    {{ end }}
+  {{end}}
 
 {{/* Rendering */}}
 
@@ -100,9 +100,13 @@
 </nav>
 {{ range $days }}
   {{ $day := .date}}
+  {{ $day_columns := "1" }}
+  {{ if .columns }}
+    {{ $day_columns = .columns }}
+  {{end}}
   <article id="workshop-day-{{$day}}" class ="workshop-day">
     <h3>{{ (time $day).Format "Monday 2 January 2006" }}</h3>
-    <div class="session-container">
+    <div class="session-container ncolumns-{{$day_columns}}">
     {{ range $session_index, $session := .session}}
       {{ $row_end := 1}}
       {{ $row_start := $row_end}}
@@ -111,12 +115,14 @@
       {{ $session_time_endsplit := split $session.time_end ":"}}
       {{ $session_color := $session.color | default "black"}}
       {{ $session_order := $session_index}}
-      {{ $day_middle :=  printf "%s-middle" $day }}
-      {{ $session_middle := $nsessions.Get $day_middle}}
-      {{ if (le (add $session_index 1) $session_middle )}}
-        {{$session_order = sub (mul (add $session_index 1) 2)  1}}
-      {{else}}
-        {{$session_order = mul 2 (sub (add $session_index 1) $session_middle)}}
+      {{ if eq $day_columns "2" }} {{/* 2 columns layout for XL Screen: change order */}}
+        {{ $day_middle :=  printf "%s-middle" $day }}
+        {{ $session_middle := $nsessions.Get $day_middle}}
+        {{ if (le (add $session_index 1) $session_middle )}}
+          {{$session_order = sub (mul (add $session_index 1) 2)  1}}
+        {{else}}
+          {{$session_order = mul 2 (sub (add $session_index 1) $session_middle)}}
+        {{end}}
       {{end}}
       <section id="workshop-session-{{$session_id}}" class="workshop-session workshop-session-{{$session.type}}"  style="--nrows:{{$nrows.Get $session_id}};--color_session:{{ $session_color}};--order:{{$session_order}};">
         {{if eq $session.type "talk"}}
