@@ -26,9 +26,9 @@
   {{/* set background image */}}
   {{ $image :=""}}
   {{ $resource := ($page.Resources.ByType "image").GetMatch "*featured*" }}
-  {{ $anchor := $page.Params.image.focal_point | default "Smart" }}
+  {{ $anchor := $page.Params.image.focal_point | default "smart" }}
   {{ with $resource }}
-    {{ $image = .Fill (printf "918x517 q90 %s" $anchor) }}
+    {{ $image = .Fill (printf "500x60 q90 %s" $anchor) }}
   <script>
     document.getElementById('{{$id}}').style.backgroundImage='url({{$image.RelPermalink}})'; // specify the image path here
   </script>
