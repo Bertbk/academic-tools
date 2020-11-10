@@ -9,9 +9,15 @@ This is an add-on for the [`Academic`](https://github.com/gcushen/hugo-academic/
 
 ## Installation
 
-Obviously, the [`Academic`](https://github.com/gcushen/hugo-academic/) theme is requiered.
+Obviously, the ~~academic~~ [`Wowchemy`](https://github.com/wowchemy/wowchemy-hugo-module/) theme is requiered.
 
-### Download
+This package can be installed as a *theme* or as a *hugo module*. The process is slitly different choosing of one each.
+
+### As a Theme
+
+Fist, download it. Second, set it as a (sub-)theme.
+
+#### Download
 
 1. Direct Download :
    - Download [the last version](https://github.com/Bertbk/academic-tools/archive/master.zip)
@@ -20,25 +26,31 @@ Obviously, the [`Academic`](https://github.com/gcushen/hugo-academic/) theme is 
     ```bash
     git submodule add https://github.com/Bertbk/academic-tools.git themes/academic-tools
     ```
+3. Hugo module : Add the following lines at the bottom of `config/_default/config.toml`:
 
-### Configure
+```toml
+[module]
+  [[module.imports]]
+    path = "github.com/Bertbk/academic-tools"
+```
+#### Configure
 
-1. Add `"academic-tools"` as a theme in `config/_default/config.toml`. Place it after `"academic"` (order matters):
+1. (Skip this step if using hugo module!) Add `"academic-tools"` as a theme in `config/_default/config.toml`: 
     ```toml
-    #params.toml
-    # Name of Academic theme folder in `themes/`.
+    theme = ["academic-tools"]
+    ```
+    If using old `"academic"` theme then place it last (order matters):
+    ```toml
     theme = ["academic", "academic-tools"]
     ```
-2. Create (if not already done) a file in `assets/scss/custom.scss` and add this line inside
+1. Create (if not already done) a file in `assets/scss/custom.scss` and add this line inside
     ```scss
     @import "academic-tools";
     ```
-3. For Next Talk widget: add [FontAwesome JS file](https://fontawesome.com/): in `/layouts/partials/custom_js.html` (create it if necessary), add the following line
+2. For Next Talk widget: add [FontAwesome JS file](https://fontawesome.com/): in `/layouts/partials/custom_js.html` (create it if necessary), add the following line
 ```html
 <script src="https://use.fontawesome.com/releases/v{{ site.Data.assets.css.fontAwesome.version}}/js/all.js"></script>
 ```
-
-
 
 ### Remarks
 
@@ -175,6 +187,8 @@ To center a button, it can for example be combined with a `{{< div style="text-a
 
 ### Next Talk
 
+#### Features
+
 You can see an example of it on the [website of infomath](https://infomath.pages.math.cnrs.fr/).
 
 - The content of the widget is displayed when no talk are programmed
@@ -184,3 +198,24 @@ You can see an example of it on the [website of infomath](https://infomath.pages
 ![next talk](static/img/next_talk.png)
 
 Credit: Photo of the Coffee by [Mike Kenneally](https://unsplash.com/photos/tNALoIZhqVM) on Unsplash
+
+
+### Workshop
+
+#### Features
+
+- Based on Wowchemy framework for talks, authors, ...
+- The schedule is split in `session` defined by: time and duration, chairperson, location (room) and a title.
+- Breaks (coffee, diner, ...) is a `type`. A break can appear several time (to avoid copy/paste) and be nicely shown with a background picture
+- Multiple day (but no "parallel session" in a day (sorry))
+
+Wanted to organize a workshop and you need a schedule plan? This widget might interests you. Below is a screen capture taking from [a workshop on wave propagation](https://jcjc_ondes.pages.math.cnrs.fr/). 
+
+![Workshop widget](static/img/workshop.png)
+
+
+#### Known problem
+
+- Heigh size is currengly hard coded
+- No Parallel session
+- ExampleSite needed
