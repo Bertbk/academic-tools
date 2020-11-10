@@ -1,6 +1,6 @@
-# Hugo Academic Tools
+# Academic Tools
 
-This is an add-on for the [`Academic`](https://github.com/gcushen/hugo-academic/) theme for the static site generator [Hugo](https://gohugo.io). This short package brings new widgets and shortcode:
+This is an add-on for the ~~[`Academic`](https://github.com/gcushen/hugo-academic/)~~  [`Wowchemy`](https://github.com/wowchemy/wowchemy-hugo-module/) theme for the static site generator [Hugo](https://gohugo.io). This short package brings new widgets and shortcode:
 
 - Widget Next Talk: Display the next talk, for a website dedicated to a seminar for example
 - `Thm` shortcode: mimic `amsthm` latex package
