@@ -102,8 +102,6 @@
       <div class="article-style abstract" itemprop="articleBody">
         {{ if $summary }}
           {{ $summary | truncate 150}} {{if (gt (len $summary) 150) }}<a href="{{ $item.RelPermalink }}">Lire la suite</a>{{end}}
-        {{else}}
-          <p>À venir&hellip;</p>
         {{end}}
       </div>
       {{ if $show_buttons }}
