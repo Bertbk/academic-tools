@@ -20,6 +20,7 @@
   {{ $day := .date}}
   {{ $nsessions.Set $day 0}}
   {{ if eq $first_day ""}}{{$first_day = .date}}{{end}}
+  {{if eq (now.Format "2006-01-02") $day}}{{$first_day = .date}}{{end}}
   {{ range $session_index, $session := .session}}
     {{ $nsessions.Add $day 1}}
     {{ $session_id := printf "%s-%d" $day $session_index }}
